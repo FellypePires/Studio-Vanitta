@@ -1,1 +1,864 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vánitta Studio - Sistema de Gestão</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary: #8a2be2;
+            --secondary: #ff69b4;
+            --dark: #333;
+            --light: #f8f9fa;
+            --bg-dark: #181818;
+            --bg-light: #f5f5f5;
+            --text-dark: #f8f9fa;
+            --text-light: #333;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-light);
+            transition: background 0.3s, color 0.3s;
+        }
+        .navbar-brand {
+            font-weight: bold;
+            color: var(--primary) !important;
+        }
+        .sidebar {
+            background: linear-gradient(180deg, var(--primary), var(--secondary));
+            color: white;
+            height: 100vh;
+            position: fixed;
+            padding-top: 20px;
+            width: 250px;
+            z-index: 1000;
+        }
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            margin: 5px 15px;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+        .sidebar .nav-link:hover, .sidebar .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        .card-header {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            color: white;
+            font-weight: bold;
+        }
+        .stat-card {
+            border-left: 4px solid var(--primary);
+            transition: transform 0.3s;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        .btn-primary {
+            background-color: var(--primary);
+            border-color: var(--primary);
+        }
+        .btn-primary:hover {
+            background-color: #6a1cb9;
+            border-color: #6a1cb9;
+        }
+        .btn-danger {
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
+        .table th {
+            background-color: var(--light);
+        }
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+        }
+        .section {
+            display: none;
+        }
+        .section.active {
+            display: block;
+        }
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+        }
+        .login-card {
+            width: 100%;
+            max-width: 400px;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        .theme-toggle {
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+        /* Dark theme */
+        body.dark-mode {
+            background-color: var(--bg-dark) !important;
+            color: var(--text-dark) !important;
+        }
+        body.dark-mode .main-content,
+        body.dark-mode .login-card,
+        body.dark-mode .modal-content {
+            background-color: #232323 !important;
+            color: var(--text-dark) !important;
+        }
+        body.dark-mode .sidebar {
+            background: linear-gradient(180deg, #2d0066, #b3006b);
+        }
+        body.dark-mode .card,
+        body.dark-mode .card-header {
+            background-color: #232323 !important;
+            color: var(--text-dark) !important;
+        }
+        body.dark-mode .table th {
+            background-color: #232323 !important;
+            color: var(--text-dark) !important;
+        }
+        body.dark-mode .btn-primary {
+            background-color: #6a1cb9 !important;
+            border-color: #6a1cb9 !important;
+        }
+        body.dark-mode .btn-secondary {
+            background-color: #444 !important;
+            border-color: #444 !important;
+        }
+        body.dark-mode .form-control,
+        body.dark-mode .form-select {
+            background-color: #232323 !important;
+            color: var(--text-dark) !important;
+            border-color: #444 !important;
+        }
+        body.dark-mode .form-control:focus,
+        body.dark-mode .form-select:focus {
+            background-color: #232323 !important;
+            color: var(--text-dark) !important;
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .login-card {
+                margin: 20px;
+            }
+        }
+        
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-container">
+        <div class="login-card bg-white">
+            <div class="text-center mb-4">
+                <i class="bi bi-scissors" style="font-size: 3rem; color: var(--primary);"></i>
+                <h2 class="mt-2"> Studio Beleza</h2>
+                <p class="text-muted">Sistema de Gestão</p>
+            </div>
+            <form id="loginForm">
+                <div class="mb-3">
+                    <label class="form-label">Usuário</label>
+                    <input type="text" class="form-control" id="username" placeholder="Digite seu usuário" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Senha</label>
+                    <input type="password" class="form-control" id="password" placeholder="Digite sua senha" required>
+                </div>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary">Entrar</button>
+                </div>
+            </form>
+            <div class="text-center mt-3">
+                <small class="text-muted">© 2025 Studio - Todos os direitos reservados</small>
+            </div>
+        </div>
+    </div>
 
+    <!-- Main Application (Hidden by default) -->
+    <div id="mainApp" style="display: none;">
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">
+                    <i class="bi bi-scissors me-2"></i>Vánitta Studio
+                </a>
+                <div class="d-flex align-items-center">
+                    <button class="theme-toggle me-3" id="themeToggle" title="Alternar tema">
+                        <i class="bi bi-moon"></i>
+                    </button>
+                    <span class="me-3">Administradora</span>
+                    <button class="btn btn-outline-danger btn-sm" onclick="logout()">
+                        <i class="bi bi-box-arrow-right me-1"></i>Sair
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container-fluid">
+            <div class="row">
+                <!-- Sidebar -->
+                <nav class="col-md-3 col-lg-2 d-md-block sidebar">
+                    <div class="position-sticky pt-3">
+                        <ul class="nav flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link active" href="#" onclick="showSection('dashboard')">
+                                    <i class="bi bi-speedometer2 me-2"></i>Dashboard
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" onclick="showSection('caixa')">
+                                    <i class="bi bi-cash-stack me-2"></i>Caixa
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" onclick="showSection('funcionarias')">
+                                    <i class="bi bi-people me-2"></i>Funcionárias
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" onclick="showSection('servicos')">
+                                    <i class="bi bi-scissors me-2"></i>Serviços
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" onclick="showSection('salarios')">
+                                    <i class="bi bi-wallet2 me-2"></i>Salários
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+
+                <!-- Main Content -->
+                <main class="col-md-9 ms-sm-auto col-lg-10 main-content">
+                    <!-- Dashboard Section -->
+                    <section id="dashboard" class="section active">
+                        <h1 class="h2">Dashboard</h1>
+                        <div class="row" id="dashboardContent">
+                            <!-- Cards do dashboard serão inseridos aqui -->
+                        </div>
+                    </section>
+                    <!-- Caixa Section -->
+                    <section id="caixa" class="section">
+                        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                            <h1 class="h2">Controle de Caixa</h1>
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#movimentacaoModal">
+                                <i class="bi bi-plus-circle me-1"></i>Nova Movimentação
+                            </button>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card shadow-sm">
+                                    <div class="card-header">
+                                        Histórico de Movimentações
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-hover" id="tabelaCaixa">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Data/Hora</th>
+                                                        <th>Descrição</th>
+                                                        <th>Tipo</th>
+                                                        <th>Valor</th>
+                                                        <th>Ações</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <!-- Movimentações serão inseridas aqui -->
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <!-- Funcionárias Section -->
+                    <section id="funcionarias" class="section">
+                        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                            <h1 class="h2">Gestão de Funcionárias</h1>
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#funcionariaModal">
+                                <i class="bi bi-person-plus me-1"></i>Nova Funcionária
+                            </button>
+                        </div>
+                        <div class="row" id="listaFuncionarias">
+                            <!-- Funcionárias serão inseridas aqui -->
+                        </div>
+                    </section>
+                    <!-- Serviços Section -->
+                    <section id="servicos" class="section">
+                        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                            <h1 class="h2">Serviços Agendados</h1>
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#servicoModal">
+                                <i class="bi bi-plus-circle me-1"></i>Novo Agendamento
+                            </button>
+                        </div>
+                        <div class="row" id="listaServicos">
+                            <!-- Serviços serão inseridas aqui -->
+                        </div>
+                    </section>
+                    <!-- Salários Section -->
+                    <section id="salarios" class="section">
+                        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                            <h1 class="h2">Salários</h1>
+                        </div>
+                        <div class="row" id="listaSalarios">
+                            <!-- Salários serão inseridos aqui -->
+                        </div>
+                    </section>
+                </main>
+            </div>
+        </div>
+        <!-- Modals -->
+        <!-- Movimentação Modal -->
+        <div class="modal fade" id="movimentacaoModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Nova Movimentação</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="formMovimentacao">
+                            <div class="mb-3">
+                                <label class="form-label">Tipo</label>
+                                <select class="form-select" id="tipoMovimentacao" required>
+                                    <option value="entrada">Entrada</option>
+                                    <option value="saida">Saída</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Valor (R$)</label>
+                                <input type="number" class="form-control" id="valorMovimentacao" placeholder="0.00" step="0.01" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Descrição</label>
+                                <input type="text" class="form-control" id="descricaoMovimentacao" placeholder="Descrição da movimentação" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Data</label>
+                                <input type="date" class="form-control" id="dataMovimentacao" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Horário</label>
+                                <input type="time" class="form-control" id="horaMovimentacao" required>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary" onclick="salvarMovimentacao()">Salvar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Funcionária Modal -->
+        <div class="modal fade" id="funcionariaModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Nova Funcionária</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="formFuncionaria">
+                            <input type="hidden" id="idFuncionaria">
+                            <div class="mb-3">
+                                <label class="form-label">Nome Completo</label>
+                                <input type="text" class="form-control" id="nomeFuncionaria" placeholder="Nome da funcionária" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Cargo</label>
+                                <input type="text" class="form-control" id="cargoFuncionaria" placeholder="Cargo" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Salário (R$)</label>
+                                <input type="number" class="form-control" id="salarioFuncionaria" placeholder="0.00" step="0.01" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Data de Admissão</label>
+                                <input type="date" class="form-control" id="admissaoFuncionaria" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">WhatsApp</label>
+                                <input type="tel" class="form-control" id="contatoFuncionaria" placeholder="(99) 99999-9999">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary" onclick="salvarFuncionaria()">Cadastrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Serviço Modal (Agendamento) -->
+        <div class="modal fade" id="servicoModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Novo Agendamento de Serviço</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="formServico">
+                            <input type="hidden" id="idServico">
+                            <div class="mb-3">
+                                <label class="form-label">Nome do Serviço</label>
+                                <input type="text" class="form-control" id="nomeServico" placeholder="Nome do serviço" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Preço (R$)</label>
+                                <input type="number" class="form-control" id="precoServico" placeholder="0.00" step="0.01" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Data do Agendamento</label>
+                                <input type="date" class="form-control" id="dataAgendamento" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Horário</label>
+                                <input type="time" class="form-control" id="horaAgendamento" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Cliente (opcional)</label>
+                                <input type="text" class="form-control" id="clienteServico" placeholder="Nome da cliente">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">WhatsApp da Cliente (opcional)</label>
+                                <input type="tel" class="form-control" id="whatsappClienteServico" placeholder="(99) 99999-9999">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary" onclick="salvarServico()">Salvar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Função de login
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            // Usuário: admin | Senha: 123456
+            if (username === 'admin' && password === '123456') {
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('mainApp').style.display = 'block';
+                carregarDados();
+                atualizarInterface();
+            } else {
+                alert('Usuário ou senha incorretos!');
+            }
+        });
+
+        // Dados do sistema (inicialmente vazio)
+        let dados = {
+            movimentacoes: [],
+            funcionarias: [],
+            servicos: [],
+            salarios: []
+        };
+
+        // Função para salvar dados no localStorage e na nuvem (Google Sheets)
+        function salvarDados() {
+            localStorage.setItem('vanittaStudio_dados', JSON.stringify(dados));
+            // Salvar na nuvem (Google Sheets via Apps Script)
+            // Substitua pela sua URL do Apps Script:
+            const url = 'SUA_URL_DO_WEBAPP';
+            fetch(url, {
+                method: 'POST',
+                body: JSON.stringify(dados),
+                headers: { 'Content-Type': 'application/json' }
+            }).catch(() => {});
+        }
+
+        // Função para carregar dados do localStorage (sempre inicia SEM funcionárias)
+        function carregarDados() {
+            const dadosSalvos = localStorage.getItem('vanittaStudio_dados');
+            if (dadosSalvos) {
+                dados = JSON.parse(dadosSalvos);
+                // Remove todas as funcionárias ao carregar
+                dados.funcionarias = [];
+                salvarDados();
+            } else {
+                // Inicia vazio, sem funcionárias e sem serviços agendados
+                dados.funcionarias = [];
+                dados.movimentacoes = [];
+                dados.servicos = [];
+                dados.salarios = [];
+                salvarDados();
+            }
+        }
+
+        // Função para mostrar seções
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+            document.querySelectorAll('.sidebar .nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            event.preventDefault();
+            const clickedLink = event.target.closest('.nav-link');
+            if (clickedLink) {
+                clickedLink.classList.add('active');
+            }
+            if(sectionId === 'dashboard') atualizarDashboard();
+        }
+
+        // Função para logout
+        function logout() {
+            if (confirm('Deseja realmente sair do sistema?')) {
+                salvarDados();
+                document.getElementById('mainApp').style.display = 'none';
+                document.getElementById('loginScreen').style.display = 'flex';
+                document.getElementById('loginForm').reset();
+            }
+        }
+
+        // Função para salvar movimentação
+        function salvarMovimentacao() {
+            const tipo = document.getElementById('tipoMovimentacao').value;
+            const valor = parseFloat(document.getElementById('valorMovimentacao').value);
+            const descricao = document.getElementById('descricaoMovimentacao').value;
+            const data = document.getElementById('dataMovimentacao').value;
+            const hora = document.getElementById('horaMovimentacao').value;
+            if (valor && descricao && data && hora) {
+                const movimentacao = {
+                    id: Date.now(),
+                    tipo: tipo,
+                    valor: valor,
+                    descricao: descricao,
+                    data: data,
+                    hora: hora
+                };
+                dados.movimentacoes.push(movimentacao);
+                atualizarInterface();
+                salvarDados();
+                const modal = bootstrap.Modal.getInstance(document.getElementById('movimentacaoModal'));
+                modal.hide();
+                document.getElementById('formMovimentacao').reset();
+                alert('Movimentação registrada com sucesso!');
+            } else {
+                alert('Preencha todos os campos obrigatórios!');
+            }
+        }
+
+        // Função para atualizar tabela de caixa
+        function atualizarTabelaCaixa() {
+            const tbody = document.querySelector('#tabelaCaixa tbody');
+            tbody.innerHTML = '';
+            dados.movimentacoes.forEach(mov => {
+                const tr = document.createElement('tr');
+                const dataHora = mov.hora ? `${new Date(mov.data).toLocaleDateString('pt-BR')} ${mov.hora}` : new Date(mov.data).toLocaleDateString('pt-BR');
+                const tipoBadge = mov.tipo === 'entrada' ? '<span class="badge bg-success">Entrada</span>' : '<span class="badge bg-danger">Saída</span>';
+                const valorClass = mov.tipo === 'entrada' ? 'text-success' : 'text-danger';
+                const valorSinal = mov.tipo === 'entrada' ? '+' : '-';
+                tr.innerHTML = `
+                    <td>${dataHora}</td>
+                    <td>${mov.descricao}</td>
+                    <td>${tipoBadge}</td>
+                    <td class="${valorClass}">${valorSinal}R$ ${mov.valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></button>
+                        <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Função para salvar ou editar funcionária (com WhatsApp)
+        function salvarFuncionaria() {
+            const id = document.getElementById('idFuncionaria').value;
+            const nome = document.getElementById('nomeFuncionaria').value;
+            const cargo = document.getElementById('cargoFuncionaria').value;
+            const salario = parseFloat(document.getElementById('salarioFuncionaria').value);
+            const admissao = document.getElementById('admissaoFuncionaria').value;
+            const contato = document.getElementById('contatoFuncionaria').value;
+            if (nome && cargo && salario && admissao) {
+                if (id) {
+                    // Editar funcionária existente
+                    const index = dados.funcionarias.findIndex(f => f.id == id);
+                    if (index !== -1) {
+                        dados.funcionarias[index] = {
+                            id: parseInt(id),
+                            nome: nome,
+                            cargo: cargo,
+                            salario: salario,
+                            admissao: admissao,
+                            contato: contato
+                        };
+                    }
+                } else {
+                    // Adicionar nova funcionária
+                    const funcionaria = {
+                        id: Date.now(),
+                        nome: nome,
+                        cargo: cargo,
+                        salario: salario,
+                        admissao: admissao,
+                        contato: contato
+                    };
+                    dados.funcionarias.push(funcionaria);
+                }
+                atualizarInterface();
+                salvarDados();
+                const modal = bootstrap.Modal.getInstance(document.getElementById('funcionariaModal'));
+                modal.hide();
+                document.getElementById('formFuncionaria').reset();
+                document.getElementById('idFuncionaria').value = '';
+                alert(id ? 'Funcionária atualizada com sucesso!' : 'Funcionária cadastrada com sucesso!');
+            } else {
+                alert('Preencha todos os campos obrigatórios!');
+            }
+        }
+
+        // Função para editar funcionária (preenche WhatsApp)
+        function editarFuncionaria(id) {
+            const funcionaria = dados.funcionarias.find(f => f.id === id);
+            if (funcionaria) {
+                document.getElementById('idFuncionaria').value = funcionaria.id;
+                document.getElementById('nomeFuncionaria').value = funcionaria.nome;
+                document.getElementById('cargoFuncionaria').value = funcionaria.cargo;
+                document.getElementById('salarioFuncionaria').value = funcionaria.salario;
+                document.getElementById('admissaoFuncionaria').value = funcionaria.admissao;
+                document.getElementById('contatoFuncionaria').value = funcionaria.contato || '';
+                const modal = new bootstrap.Modal(document.getElementById('funcionariaModal'));
+                modal.show();
+            }
+        }
+
+        // Função para excluir funcionária
+        function excluirFuncionaria(id) {
+            if (confirm('Deseja realmente excluir esta funcionária?')) {
+                dados.funcionarias = dados.funcionarias.filter(f => f.id !== id);
+                atualizarInterface();
+                salvarDados();
+                alert('Funcionária excluída com sucesso!');
+            }
+        }
+
+        // Função para atualizar lista de funcionárias (com botão WhatsApp)
+        function atualizarListaFuncionarias() {
+            const container = document.getElementById('listaFuncionarias');
+            container.innerHTML = '';
+            dados.funcionarias.forEach(func => {
+                const col = document.createElement('div');
+                col.className = 'col-md-4 mb-4';
+                const contatoFormatado = func.contato ? func.contato.replace(/\D/g, '') : '';
+                col.innerHTML = `
+                    <div class="card shadow-sm">
+                        <div class="card-body text-center">
+                            <i class="bi bi-person-circle" style="font-size: 3rem; color: var(--primary);"></i>
+                            <h5 class="card-title mt-2">${func.nome}</h5>
+                            <p class="card-text">${func.cargo}</p>
+                            <p class="text-muted">Salário: R$ ${func.salario.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
+                            <p class="text-muted">Admissão: ${new Date(func.admissao).toLocaleDateString('pt-BR')}</p>
+                            <p class="text-muted">WhatsApp: ${func.contato ? func.contato : 'Não informado'}</p>
+                            ${func.contato ? `<a class="btn btn-success btn-sm mb-2" href="https://wa.me/55${contatoFormatado}" target="_blank"><i class="bi bi-whatsapp"></i> WhatsApp</a>` : ''}
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-outline-primary btn-sm" onclick="editarFuncionaria(${func.id})">
+                                    <i class="bi bi-pencil me-1"></i>Editar
+                                </button>
+                                <button class="btn btn-outline-danger btn-sm" onclick="excluirFuncionaria(${func.id})">
+                                    <i class="bi bi-trash me-1"></i>Excluir
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(col);
+            });
+        }
+
+        // Função para salvar serviço/agendamento
+        function salvarServico() {
+            const nome = document.getElementById('nomeServico').value;
+            const preco = parseFloat(document.getElementById('precoServico').value);
+            const data = document.getElementById('dataAgendamento').value;
+            const hora = document.getElementById('horaAgendamento').value;
+            const cliente = document.getElementById('clienteServico').value;
+            const whatsappCliente = document.getElementById('whatsappClienteServico').value;
+            if (nome && preco && data && hora) {
+                const servico = {
+                    id: Date.now(),
+                    nome: nome,
+                    preco: preco,
+                    data: data,
+                    hora: hora,
+                    cliente: cliente,
+                    whatsappCliente: whatsappCliente
+                };
+                dados.servicos.push(servico);
+                atualizarListaServicos();
+                salvarDados();
+                const modal = bootstrap.Modal.getInstance(document.getElementById('servicoModal'));
+                modal.hide();
+                document.getElementById('formServico').reset();
+                alert('Serviço agendado com sucesso!');
+            } else {
+                alert('Preencha todos os campos obrigatórios!');
+            }
+        }
+
+        // Função para mostrar serviços agendados
+        function atualizarListaServicos() {
+            const container = document.getElementById('listaServicos');
+            container.innerHTML = '';
+            dados.servicos.forEach(serv => {
+                const col = document.createElement('div');
+                col.className = 'col-md-4 mb-3';
+                const whatsappBtn = serv.whatsappCliente
+                    ? `<a class="btn btn-success btn-sm mb-2" href="https://wa.me/55${serv.whatsappCliente.replace(/\D/g,'')}" target="_blank"><i class="bi bi-whatsapp"></i> WhatsApp Cliente</a>`
+                    : '';
+                col.innerHTML = `
+                    <div class="card">
+                        <div class="card-body">
+                            <h5>${serv.nome}</h5>
+                            <p>Preço: R$ ${serv.preco.toLocaleString('pt-BR')}</p>
+                            <p>Data: ${serv.data} ${serv.hora}</p>
+                            <p>Cliente: ${serv.cliente || 'Não informado'}</p>
+                            ${whatsappBtn}
+                        </div>
+                    </div>
+                `;
+                container.appendChild(col);
+            });
+        }
+
+        // Função para mostrar salários (exemplo simples)
+        function atualizarListaSalarios() {
+            const container = document.getElementById('listaSalarios');
+            container.innerHTML = '';
+            if (!dados.funcionarias.length) {
+                container.innerHTML = '<div class="alert alert-warning">Nenhuma funcionária cadastrada.</div>';
+                return;
+            }
+            dados.funcionarias.forEach(func => {
+                const col = document.createElement('div');
+                col.className = 'col-md-4 mb-3';
+                col.innerHTML = `
+                    <div class="card">
+                        <div class="card-body">
+                            <h5>${func.nome}</h5>
+                            <p>Cargo: ${func.cargo}</p>
+                            <p>Salário: R$ ${func.salario.toLocaleString('pt-BR')}</p>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(col);
+            });
+        }
+
+        // Função para atualizar o dashboard
+        function atualizarDashboard() {
+            const container = document.getElementById('dashboardContent');
+            const totalEntradas = dados.movimentacoes.filter(m => m.tipo === 'entrada').reduce((acc, m) => acc + m.valor, 0);
+            const totalSaidas = dados.movimentacoes.filter(m => m.tipo === 'saida').reduce((acc, m) => acc + m.valor, 0);
+            const saldo = totalEntradas - totalSaidas;
+            const totalFuncionarias = dados.funcionarias.length;
+            const totalServicos = dados.servicos.length;
+            container.innerHTML = `
+                <div class="col-md-3 mb-3">
+                    <div class="card stat-card">
+                        <div class="card-body">
+                            <h6 class="card-title">Saldo em Caixa</h6>
+                            <h3 class="text-primary">R$ ${saldo.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card stat-card">
+                        <div class="card-body">
+                            <h6 class="card-title">Entradas</h6>
+                            <h3 class="text-success">R$ ${totalEntradas.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card stat-card">
+                        <div class="card-body">
+                            <h6 class="card-title">Saídas</h6>
+                            <h3 class="text-danger">R$ ${totalSaidas.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card stat-card">
+                        <div class="card-body">
+                            <h6 class="card-title">Funcionárias</h6>
+                            <h3 class="text-info">${totalFuncionarias}</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card stat-card">
+                        <div class="card-body">
+                            <h6 class="card-title">Serviços Agendados</h6>
+                            <h3 class="text-info">${totalServicos}</h3>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Atualiza toda a interface
+        function atualizarInterface() {
+            atualizarTabelaCaixa();
+            atualizarListaFuncionarias();
+            atualizarListaServicos();
+            atualizarListaSalarios();
+            atualizarDashboard();
+        }
+
+        // Inicializar data atual nos formulários
+        window.onload = function() {
+            const hoje = new Date().toISOString().split('T')[0];
+            document.getElementById('dataMovimentacao').value = hoje;
+            document.getElementById('admissaoFuncionaria').value = hoje;
+            document.getElementById('dataAgendamento').value = hoje;
+        };
+
+        // Tema escuro/claro
+        document.getElementById('themeToggle').addEventListener('click', function() {
+            document.body.classList.toggle('dark-mode');
+            // Alterna ícone
+            const icon = this.querySelector('i');
+            if(document.body.classList.contains('dark-mode')) {
+                icon.classList.remove('bi-moon');
+                icon.classList.add('bi-sun');
+            } else {
+                icon.classList.remove('bi-sun');
+                icon.classList.add('bi-moon');
+            }
+        });
+
+        // Salvar dados automaticamente a cada 30 segundos
+        setInterval(salvarDados, 30000);
+    </script>
+   
+</body>
+</html>
