@@ -738,6 +738,7 @@
             if (confirm('Deseja realmente excluir este serviço?')) {
                 dados.servicos = dados.servicos.filter(s => s.id !== id);
                 atualizarListaServicos();
+                atualizarInterface(); // Atualiza o dashboard também
                 salvarDados();
                 alert('Serviço excluído com sucesso!');
             }
@@ -814,7 +815,7 @@
             const totalSaidas = dados.movimentacoes.filter(m => m.tipo === 'saida').reduce((acc, m) => acc + m.valor, 0);
             const saldo = totalEntradas - totalSaidas;
             const totalFuncionarias = dados.funcionarias.length;
-            const totalServicos = dados.servicos.length;
+            const totalServicosAgendados = dados.servicos.filter(s => s.status === 'agendado').length;
             const servicosConcluidos = dados.servicos.filter(s => s.status === 'concluido').length;
             
             container.innerHTML = `
@@ -854,7 +855,7 @@
                     <div class="card stat-card">
                         <div class="card-body">
                             <h6 class="card-title">Serviços Agendados</h6>
-                            <h3 class="text-info">${totalServicos}</h3>
+                            <h3 class="text-info">${totalServicosAgendados}</h3>
                         </div>
                     </div>
                 </div>
