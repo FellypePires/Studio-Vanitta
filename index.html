@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -146,6 +147,57 @@
             background-color: #232323 !important;
             color: var(--text-dark) !important;
         }
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+        }
+        .calendar-header {
+            text-align: center;
+            font-weight: bold;
+            padding: 10px 0;
+        }
+        .calendar-day {
+            height: 80px;
+            border: 1px solid #ddd;
+            padding: 5px;
+            background-color: white;
+            overflow: hidden;
+            font-size: 0.8rem;
+        }
+        body.dark-mode .calendar-day {
+            background-color: #232323;
+            border-color: #444;
+        }
+        .calendar-day.other-month {
+            background-color: #f0f0f0;
+            color: #999;
+        }
+        body.dark-mode .calendar-day.other-month {
+            background-color: #1a1a1a;
+            color: #666;
+        }
+        .calendar-day-number {
+            font-weight: bold;
+            margin-bottom: 3px;
+        }
+        .calendar-event {
+            background-color: var(--primary);
+            color: white;
+            padding: 2px 4px;
+            border-radius: 3px;
+            margin-bottom: 2px;
+            font-size: 0.7rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .report-card {
+            transition: transform 0.3s;
+        }
+        .report-card:hover {
+            transform: translateY(-3px);
+        }
         @media (max-width: 768px) {
             .sidebar {
                 width: 100%;
@@ -234,6 +286,16 @@
                                 </a>
                             </li>
                             <li class="nav-item">
+                                <a class="nav-link" href="#" onclick="showSection('calendario')">
+                                    <i class="bi bi-calendar-event me-2"></i>Calendário
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" onclick="showSection('relatorios')">
+                                    <i class="bi bi-bar-chart me-2"></i>Relatórios
+                                </a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link" href="#" onclick="showSection('salarios')">
                                     <i class="bi bi-wallet2 me-2"></i>Salários
                                 </a>
@@ -308,6 +370,64 @@
                         </div>
                         <div class="row" id="listaServicos">
                             <!-- Serviços serão inseridas aqui -->
+                        </div>
+                    </section>
+                    <!-- Calendário Section -->
+                    <section id="calendario" class="section">
+                        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                            <h1 class="h2">Calendário de Serviços</h1>
+                            <div>
+                                <button class="btn btn-outline-primary me-2" onclick="mudarMes(-1)">
+                                    <i class="bi bi-chevron-left"></i>
+                                </button>
+                                <span id="mesAnoAtual"></span>
+                                <button class="btn btn-outline-primary ms-2" onclick="mudarMes(1)">
+                                    <i class="bi bi-chevron-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card shadow-sm">
+                                    <div class="card-body">
+                                        <div class="calendar" id="calendarioServicos">
+                                            <!-- Calendário será gerado aqui -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <!-- Relatórios Section -->
+                    <section id="relatorios" class="section">
+                        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                            <h1 class="h2">Relatórios Financeiros</h1>
+                            <div>
+                                <select class="form-select d-inline-block w-auto" id="mesRelatorio" onchange="filtrarRelatorio()">
+                                    <option value="">Selecione o mês</option>
+                                    <option value="01">Janeiro</option>
+                                    <option value="02">Fevereiro</option>
+                                    <option value="03">Março</option>
+                                    <option value="04">Abril</option>
+                                    <option value="05">Maio</option>
+                                    <option value="06">Junho</option>
+                                    <option value="07">Julho</option>
+                                    <option value="08">Agosto</option>
+                                    <option value="09">Setembro</option>
+                                    <option value="10">Outubro</option>
+                                    <option value="11">Novembro</option>
+                                    <option value="12">Dezembro</option>
+                                </select>
+                                <select class="form-select d-inline-block w-auto ms-2" id="anoRelatorio" onchange="filtrarRelatorio()">
+                                    <option value="">Selecione o ano</option>
+                                    <option value="2023">2023</option>
+                                    <option value="2024">2024</option>
+                                    <option value="2025">2025</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row" id="relatorioContent">
+                            <!-- Relatório será gerado aqui -->
                         </div>
                     </section>
                     <!-- Salários Section -->
@@ -463,6 +583,7 @@
                 document.getElementById('mainApp').style.display = 'block';
                 carregarDados();
                 atualizarInterface();
+                renderizarCalendario(new Date().getFullYear(), new Date().getMonth());
             } else {
                 alert('Usuário ou senha incorretos!');
             }
@@ -474,28 +595,20 @@
             servicos: [],
             salarios: []
         };
-        // Função para salvar dados no localStorage e na nuvem (Google Sheets)
+        // Variáveis para o calendário
+        let anoCalendario = new Date().getFullYear();
+        let mesCalendario = new Date().getMonth();
+        // Função para salvar dados no localStorage
         function salvarDados() {
             localStorage.setItem('vanittaStudio_dados', JSON.stringify(dados));
-            // Salvar na nuvem (Google Sheets via Apps Script)
-            // Substitua pela sua URL do Apps Script:
-            const url = 'SUA_URL_DO_WEBAPP';
-            fetch(url, {
-                method: 'POST',
-                body: JSON.stringify(dados),
-                headers: { 'Content-Type': 'application/json' }
-            }).catch(() => {});
         }
-        // Função para carregar dados do localStorage (sempre inicia SEM funcionárias)
+        // Função para carregar dados do localStorage
         function carregarDados() {
             const dadosSalvos = localStorage.getItem('vanittaStudio_dados');
             if (dadosSalvos) {
                 dados = JSON.parse(dadosSalvos);
-                // Remove todas as funcionárias ao carregar
-                dados.funcionarias = [];
-                salvarDados();
             } else {
-                // Inicia vazio, sem funcionárias e sem serviços agendados
+                // Inicia vazio
                 dados.funcionarias = [];
                 dados.movimentacoes = [];
                 dados.servicos = [];
@@ -518,6 +631,8 @@
                 clickedLink.classList.add('active');
             }
             if(sectionId === 'dashboard') atualizarDashboard();
+            if(sectionId === 'relatorios') atualizarRelatorio();
+            if(sectionId === 'calendario') renderizarCalendario(anoCalendario, mesCalendario);
         }
         // Função para logout
         function logout() {
@@ -555,6 +670,15 @@
                 alert('Preencha todos os campos obrigatórios!');
             }
         }
+        // Função para excluir movimentação
+        function excluirMovimentacao(id) {
+            if (confirm('Deseja realmente excluir esta movimentação?')) {
+                dados.movimentacoes = dados.movimentacoes.filter(m => m.id !== id);
+                atualizarInterface();
+                salvarDados();
+                alert('Movimentação excluída com sucesso!');
+            }
+        }
         // Função para atualizar tabela de caixa
         function atualizarTabelaCaixa() {
             const tbody = document.querySelector('#tabelaCaixa tbody');
@@ -571,14 +695,15 @@
                     <td>${tipoBadge}</td>
                     <td class="${valorClass}">${valorSinal}R$ ${mov.valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
                     <td>
-                        <button class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></button>
-                        <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="excluirMovimentacao(${mov.id})">
+                            <i class="bi bi-trash"></i>
+                        </button>
                     </td>
                 `;
                 tbody.appendChild(tr);
             });
         }
-        // Função para salvar ou editar funcionária (com WhatsApp)
+        // Função para salvar ou editar funcionária
         function salvarFuncionaria() {
             const id = document.getElementById('idFuncionaria').value;
             const nome = document.getElementById('nomeFuncionaria').value;
@@ -623,7 +748,7 @@
                 alert('Preencha todos os campos obrigatórios!');
             }
         }
-        // Função para editar funcionária (preenche WhatsApp)
+        // Função para editar funcionária
         function editarFuncionaria(id) {
             const funcionaria = dados.funcionarias.find(f => f.id === id);
             if (funcionaria) {
@@ -646,7 +771,7 @@
                 alert('Funcionária excluída com sucesso!');
             }
         }
-        // Função para atualizar lista de funcionárias (com botão WhatsApp)
+        // Função para atualizar lista de funcionárias
         function atualizarListaFuncionarias() {
             const container = document.getElementById('listaFuncionarias');
             container.innerHTML = '';
@@ -695,7 +820,7 @@
                     hora: hora,
                     cliente: cliente,
                     whatsappCliente: whatsappCliente,
-                    status: 'agendado' // Status inicial
+                    status: 'agendado'
                 };
                 dados.servicos.push(servico);
                 atualizarListaServicos();
@@ -738,7 +863,7 @@
             if (confirm('Deseja realmente excluir este serviço?')) {
                 dados.servicos = dados.servicos.filter(s => s.id !== id);
                 atualizarListaServicos();
-                atualizarInterface(); // Atualiza o dashboard também
+                atualizarInterface();
                 salvarDados();
                 alert('Serviço excluído com sucesso!');
             }
@@ -751,7 +876,6 @@
                 const col = document.createElement('div');
                 col.className = 'col-md-4 mb-3';
                 
-                // Determinar classe de status
                 const statusClass = serv.status === 'concluido' ? 'bg-success text-white' : 'bg-warning text-dark';
                 const statusText = serv.status === 'concluido' ? 'Concluído' : 'Agendado';
                 
@@ -785,7 +909,7 @@
                 container.appendChild(col);
             });
         }
-        // Função para mostrar salários (exemplo simples)
+        // Função para mostrar salários
         function atualizarListaSalarios() {
             const container = document.getElementById('listaSalarios');
             container.innerHTML = '';
@@ -869,6 +993,198 @@
                 </div>
             `;
         }
+        // Função para renderizar o calendário
+        function renderizarCalendario(ano, mes) {
+            const calendario = document.getElementById('calendarioServicos');
+            const mesAno = document.getElementById('mesAnoAtual');
+            
+            // Atualiza o cabeçalho com o mês/ano atual
+            const nomesMeses = [
+                'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+                'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+            ];
+            mesAno.textContent = `${nomesMeses[mes]} ${ano}`;
+            
+            // Limpa o calendário
+            calendario.innerHTML = '';
+            
+            // Cabeçalhos dos dias da semana
+            const diasSemana = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+            diasSemana.forEach(dia => {
+                const header = document.createElement('div');
+                header.className = 'calendar-header';
+                header.textContent = dia;
+                calendario.appendChild(header);
+            });
+            
+            // Primeiro dia do mês
+            const primeiroDia = new Date(ano, mes, 1);
+            // Último dia do mês
+            const ultimoDia = new Date(ano, mes + 1, 0);
+            // Dia da semana do primeiro dia (0 = Domingo, 6 = Sábado)
+            const primeiroDiaSemana = primeiroDia.getDay();
+            // Número de dias no mês
+            const diasNoMes = ultimoDia.getDate();
+            
+            // Dias do mês anterior visíveis
+            const ultimoDiaMesAnterior = new Date(ano, mes, 0).getDate();
+            for (let i = primeiroDiaSemana - 1; i >= 0; i--) {
+                const dia = document.createElement('div');
+                dia.className = 'calendar-day other-month';
+                dia.innerHTML = `<div class="calendar-day-number">${ultimoDiaMesAnterior - i}</div>`;
+                calendario.appendChild(dia);
+            }
+            
+            // Dias do mês atual
+            for (let i = 1; i <= diasNoMes; i++) {
+                const dia = document.createElement('div');
+                dia.className = 'calendar-day';
+                dia.innerHTML = `<div class="calendar-day-number">${i}</div>`;
+                
+                // Adicionar eventos do dia
+                const dataAtual = `${ano}-${String(mes + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+                const servicosDoDia = dados.servicos.filter(s => s.data === dataAtual);
+                
+                servicosDoDia.forEach(servico => {
+                    const evento = document.createElement('div');
+                    evento.className = 'calendar-event';
+                    evento.textContent = `${servico.hora} - ${servico.nome}`;
+                    evento.title = `${servico.nome} - ${servico.cliente || 'Cliente não informado'}`;
+                    dia.appendChild(evento);
+                });
+                
+                calendario.appendChild(dia);
+            }
+            
+            // Dias do próximo mês visíveis
+            const totalCelulas = 42; // 6 semanas * 7 dias
+            const celulasPreenchidas = primeiroDiaSemana + diasNoMes;
+            const diasProximoMes = totalCelulas - celulasPreenchidas;
+            
+            for (let i = 1; i <= diasProximoMes; i++) {
+                const dia = document.createElement('div');
+                dia.className = 'calendar-day other-month';
+                dia.innerHTML = `<div class="calendar-day-number">${i}</div>`;
+                calendario.appendChild(dia);
+            }
+        }
+        
+        // Função para mudar o mês no calendário
+        function mudarMes(delta) {
+            mesCalendario += delta;
+            if (mesCalendario < 0) {
+                mesCalendario = 11;
+                anoCalendario--;
+            } else if (mesCalendario > 11) {
+                mesCalendario = 0;
+                anoCalendario++;
+            }
+            renderizarCalendario(anoCalendario, mesCalendario);
+        }
+        
+        // Função para atualizar o relatório
+        function atualizarRelatorio() {
+            filtrarRelatorio();
+        }
+        
+        // Função para filtrar o relatório por mês/ano
+        function filtrarRelatorio() {
+            const mes = document.getElementById('mesRelatorio').value;
+            const ano = document.getElementById('anoRelatorio').value;
+            
+            if (!mes || !ano) {
+                document.getElementById('relatorioContent').innerHTML = '<div class="col-12"><div class="alert alert-info">Selecione um mês e ano para visualizar o relatório.</div></div>';
+                return;
+            }
+            
+            // Filtrar movimentações pelo mês e ano
+            const movimentacoesFiltradas = dados.movimentacoes.filter(mov => {
+                const dataMov = new Date(mov.data);
+                return dataMov.getMonth() + 1 === parseInt(mes) && dataMov.getFullYear() === parseInt(ano);
+            });
+            
+            // Calcular totais
+            const entradas = movimentacoesFiltradas.filter(m => m.tipo === 'entrada').reduce((acc, m) => acc + m.valor, 0);
+            const saidas = movimentacoesFiltradas.filter(m => m.tipo === 'saida').reduce((acc, m) => acc + m.valor, 0);
+            const saldo = entradas - saidas;
+            
+            // Renderizar relatório
+            const container = document.getElementById('relatorioContent');
+            container.innerHTML = `
+                <div class="col-md-4 mb-4">
+                    <div class="card report-card">
+                        <div class="card-body text-center">
+                            <i class="bi bi-arrow-down-circle text-success" style="font-size: 3rem;"></i>
+                            <h5 class="mt-3">Entradas</h5>
+                            <h3 class="text-success">R$ ${entradas.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card report-card">
+                        <div class="card-body text-center">
+                            <i class="bi bi-arrow-up-circle text-danger" style="font-size: 3rem;"></i>
+                            <h5 class="mt-3">Saídas</h5>
+                            <h3 class="text-danger">R$ ${saidas.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card report-card">
+                        <div class="card-body text-center">
+                            <i class="bi bi-currency-exchange text-primary" style="font-size: 3rem;"></i>
+                            <h5 class="mt-3">Saldo</h5>
+                            <h3 class="text-primary">R$ ${saldo.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Detalhamento de Movimentações - ${getNomeMes(mes)}/${ano}</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Data</th>
+                                            <th>Descrição</th>
+                                            <th>Tipo</th>
+                                            <th>Valor</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${movimentacoesFiltradas.map(mov => {
+                                            const valorClass = mov.tipo === 'entrada' ? 'text-success' : 'text-danger';
+                                            const valorSinal = mov.tipo === 'entrada' ? '+' : '-';
+                                            return `
+                                                <tr>
+                                                    <td>${new Date(mov.data).toLocaleDateString('pt-BR')}</td>
+                                                    <td>${mov.descricao}</td>
+                                                    <td>${mov.tipo === 'entrada' ? 'Entrada' : 'Saída'}</td>
+                                                    <td class="${valorClass}">${valorSinal}R$ ${mov.valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
+                                                </tr>
+                                            `;
+                                        }).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Função auxiliar para obter nome do mês
+        function getNomeMes(numeroMes) {
+            const meses = [
+                'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+                'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+            ];
+            return meses[parseInt(numeroMes) - 1];
+        }
+        
         // Atualiza toda a interface
         function atualizarInterface() {
             atualizarTabelaCaixa();
@@ -876,14 +1192,28 @@
             atualizarListaServicos();
             atualizarListaSalarios();
             atualizarDashboard();
+            renderizarCalendario(anoCalendario, mesCalendario);
         }
+        
         // Inicializar data atual nos formulários
         window.onload = function() {
             const hoje = new Date().toISOString().split('T')[0];
             document.getElementById('dataMovimentacao').value = hoje;
             document.getElementById('admissaoFuncionaria').value = hoje;
             document.getElementById('dataAgendamento').value = hoje;
+            
+            // Preencher anos no relatório
+            const anoSelect = document.getElementById('anoRelatorio');
+            const anoAtual = new Date().getFullYear();
+            for (let i = anoAtual - 2; i <= anoAtual + 2; i++) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = i;
+                if (i === anoAtual) option.selected = true;
+                anoSelect.appendChild(option);
+            }
         };
+        
         // Tema escuro/claro
         document.getElementById('themeToggle').addEventListener('click', function() {
             document.body.classList.toggle('dark-mode');
@@ -897,8 +1227,10 @@
                 icon.classList.add('bi-moon');
             }
         });
+        
         // Salvar dados automaticamente a cada 30 segundos
         setInterval(salvarDados, 30000);
     </script>
 </body>
 </html>
+```
