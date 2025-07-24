@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -197,6 +198,28 @@
         .report-card:hover {
             transform: translateY(-3px);
         }
+        .time-slot {
+            background-color: #e9ecef;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            padding: 5px;
+            margin: 2px 0;
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+        .time-slot.available {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+        .time-slot.unavailable {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            text-decoration: line-through;
+        }
+        .time-slot.selected {
+            background-color: #b8daff;
+            border-color: #9fcdff;
+        }
         @media (max-width: 768px) {
             .sidebar {
                 width: 100%;
@@ -251,7 +274,7 @@
                     <button class="theme-toggle me-3" id="themeToggle" title="Alternar tema">
                         <i class="bi bi-moon"></i>
                     </button>
-                    <span class="me-3">Administradora</span>
+                    <span class="me-3" id="userRole"></span>
                     <button class="btn btn-outline-danger btn-sm" onclick="logout()">
                         <i class="bi bi-box-arrow-right me-1"></i>Sair
                     </button>
@@ -260,8 +283,8 @@
         </nav>
         <div class="container-fluid">
             <div class="row">
-                <!-- Sidebar -->
-                <nav class="col-md-3 col-lg-2 d-md-block sidebar">
+                <!-- Sidebar Funcionário -->
+                <nav id="sidebarFuncionario" class="col-md-3 col-lg-2 d-md-block sidebar">
                     <div class="position-sticky pt-3">
                         <ul class="nav flex-column">
                             <li class="nav-item">
@@ -290,6 +313,11 @@
                                 </a>
                             </li>
                             <li class="nav-item">
+                                <a class="nav-link" href="#" onclick="showSection('horarios')">
+                                    <i class="bi bi-clock me-2"></i>Horários
+                                </a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link" href="#" onclick="showSection('relatorios')">
                                     <i class="bi bi-bar-chart me-2"></i>Relatórios
                                 </a>
@@ -297,6 +325,18 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="#" onclick="showSection('salarios')">
                                     <i class="bi bi-wallet2 me-2"></i>Salários
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+                <!-- Sidebar Cliente -->
+                <nav id="sidebarCliente" class="col-md-3 col-lg-2 d-md-block sidebar" style="display: none;">
+                    <div class="position-sticky pt-3">
+                        <ul class="nav flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link active" href="#" onclick="showSection('calendarioCliente')">
+                                    <i class="bi bi-calendar-event me-2"></i>Agendamento
                                 </a>
                             </li>
                         </ul>
@@ -371,7 +411,7 @@
                             <!-- Serviços serão inseridas aqui -->
                         </div>
                     </section>
-                    <!-- Calendário Section -->
+                    <!-- Calendário Section (Funcionário) -->
                     <section id="calendario" class="section">
                         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                             <h1 class="h2">Calendário de Serviços</h1>
@@ -391,6 +431,55 @@
                                     <div class="card-body">
                                         <div class="calendar" id="calendarioServicos">
                                             <!-- Calendário será gerado aqui -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <!-- Horários Section -->
+                    <section id="horarios" class="section">
+                        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                            <h1 class="h2">Horários de Funcionamento</h1>
+                            <button class="btn btn-primary" onclick="salvarHorarios()">
+                                <i class="bi bi-save me-1"></i>Salvar Horários
+                            </button>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card shadow-sm">
+                                    <div class="card-header">
+                                        Definir Horários de Funcionamento
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h5>Horário de Abertura</h5>
+                                                <div class="mb-3">
+                                                    <label class="form-label">Hora de Abertura</label>
+                                                    <input type="time" class="form-control" id="horaAbertura" value="08:00">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label">Hora de Fechamento</label>
+                                                    <input type="time" class="form-control" id="horaFechamento" value="18:00">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <h5>Intervalo de Agendamento</h5>
+                                                <div class="mb-3">
+                                                    <label class="form-label">Duração dos Slots (minutos)</label>
+                                                    <select class="form-select" id="duracaoSlot">
+                                                        <option value="15">15 minutos</option>
+                                                        <option value="30" selected>30 minutos</option>
+                                                        <option value="45">45 minutos</option>
+                                                        <option value="60">60 minutos</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="alert alert-info">
+                                            <i class="bi bi-info-circle me-2"></i>
+                                            Estas configurações definem os horários disponíveis para agendamentos pelos clientes.
                                         </div>
                                     </div>
                                 </div>
@@ -436,6 +525,75 @@
                         </div>
                         <div class="row" id="listaSalarios">
                             <!-- Salários serão inseridos aqui -->
+                        </div>
+                    </section>
+                    <!-- Calendário Section (Cliente) -->
+                    <section id="calendarioCliente" class="section">
+                        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                            <h1 class="h2">Agendamento de Serviços</h1>
+                            <div>
+                                <button class="btn btn-outline-primary me-2" onclick="mudarMesCliente(-1)">
+                                    <i class="bi bi-chevron-left"></i>
+                                </button>
+                                <span id="mesAnoAtualCliente"></span>
+                                <button class="btn btn-outline-primary ms-2" onclick="mudarMesCliente(1)">
+                                    <i class="bi bi-chevron-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="card shadow-sm">
+                                    <div class="card-body">
+                                        <div class="calendar" id="calendarioClienteView">
+                                            <!-- Calendário será gerado aqui -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card shadow-sm">
+                                    <div class="card-header">
+                                        Detalhes do Agendamento
+                                    </div>
+                                    <div class="card-body">
+                                        <div id="detalhesAgendamento">
+                                            <p class="text-muted">Selecione uma data no calendário para ver os horários disponíveis.</p>
+                                        </div>
+                                        <div id="formAgendamento" style="display: none;">
+                                            <h5 id="dataSelecionada"></h5>
+                                            <div class="mb-3">
+                                                <label class="form-label">Horário</label>
+                                                <div id="slotsHorarios">
+                                                    <!-- Slots de horário serão inseridos aqui -->
+                                                </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Serviço</label>
+                                                <select class="form-select" id="servicoCliente">
+                                                    <option value="">Selecione um serviço</option>
+                                                    <option value="Corte de Cabelo">Corte de Cabelo</option>
+                                                    <option value="Coloração">Coloração</option>
+                                                    <option value="Manicure">Manicure</option>
+                                                    <option value="Pedicure">Pedicure</option>
+                                                    <option value="Depilação">Depilação</option>
+                                                </select>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Nome Completo</label>
+                                                <input type="text" class="form-control" id="nomeCliente" placeholder="Seu nome completo">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">WhatsApp</label>
+                                                <input type="tel" class="form-control" id="whatsappCliente" placeholder="(99) 99999-9999">
+                                            </div>
+                                            <button class="btn btn-primary w-100" onclick="confirmarAgendamento()">
+                                                <i class="bi bi-calendar-check me-1"></i>Confirmar Agendamento
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </section>
                 </main>
@@ -576,27 +734,57 @@
             e.preventDefault();
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
-            // Usuário: admin | Senha: 123456
+            
+            // Verificar tipo de usuário
+            let userType = '';
             if (username === 'admin' && password === '123456') {
+                userType = 'funcionario';
+            } else if (username === 'cliente' && password === 'cliente123') {
+                userType = 'cliente';
+            }
+            
+            if (userType) {
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('mainApp').style.display = 'block';
-                carregarDados();
-                atualizarInterface();
-                renderizarCalendario(new Date().getFullYear(), new Date().getMonth());
+                
+                // Mostrar interface apropriada
+                if (userType === 'funcionario') {
+                    document.getElementById('sidebarFuncionario').style.display = 'block';
+                    document.getElementById('sidebarCliente').style.display = 'none';
+                    document.getElementById('userRole').textContent = 'Funcionário';
+                    carregarDados();
+                    atualizarInterface();
+                    renderizarCalendario(new Date().getFullYear(), new Date().getMonth());
+                } else {
+                    document.getElementById('sidebarFuncionario').style.display = 'none';
+                    document.getElementById('sidebarCliente').style.display = 'block';
+                    document.getElementById('userRole').textContent = 'Cliente';
+                    carregarDados();
+                    showSection('calendarioCliente');
+                    renderizarCalendarioCliente(new Date().getFullYear(), new Date().getMonth());
+                }
             } else {
                 alert('Usuário ou senha incorretos!');
             }
         });
-        // Dados do sistema (inicialmente vazio)
+        // Dados do sistema
         let dados = {
             movimentacoes: [],
             funcionarias: [],
             servicos: [],
-            salarios: []
+            salarios: [],
+            horarios: {
+                abertura: "08:00",
+                fechamento: "18:00",
+                duracaoSlot: 30
+            }
         };
         // Variáveis para o calendário
         let anoCalendario = new Date().getFullYear();
         let mesCalendario = new Date().getMonth();
+        let anoCalendarioCliente = new Date().getFullYear();
+        let mesCalendarioCliente = new Date().getMonth();
+        let dataSelecionadaCliente = null;
         // Função para salvar dados no localStorage
         function salvarDados() {
             localStorage.setItem('vanittaStudio_dados', JSON.stringify(dados));
@@ -606,12 +794,25 @@
             const dadosSalvos = localStorage.getItem('vanittaStudio_dados');
             if (dadosSalvos) {
                 dados = JSON.parse(dadosSalvos);
+                // Garantir que os horários existam
+                if (!dados.horarios) {
+                    dados.horarios = {
+                        abertura: "08:00",
+                        fechamento: "18:00",
+                        duracaoSlot: 30
+                    };
+                }
             } else {
                 // Inicia vazio
                 dados.funcionarias = [];
                 dados.movimentacoes = [];
                 dados.servicos = [];
                 dados.salarios = [];
+                dados.horarios = {
+                    abertura: "08:00",
+                    fechamento: "18:00",
+                    duracaoSlot: 30
+                };
                 salvarDados();
             }
         }
@@ -632,6 +833,8 @@
             if(sectionId === 'dashboard') atualizarDashboard();
             if(sectionId === 'relatorios') atualizarRelatorio();
             if(sectionId === 'calendario') renderizarCalendario(anoCalendario, mesCalendario);
+            if(sectionId === 'calendarioCliente') renderizarCalendarioCliente(anoCalendarioCliente, mesCalendarioCliente);
+            if(sectionId === 'horarios') carregarHorarios();
         }
         // Função para logout
         function logout() {
@@ -815,7 +1018,7 @@
                     id: Date.now(),
                     nome: nome,
                     preco: preco,
-                    data: data,
+                     data,
                     hora: hora,
                     cliente: cliente,
                     whatsappCliente: whatsappCliente,
@@ -992,7 +1195,7 @@
                 </div>
             `;
         }
-        // Função para renderizar o calendário
+        // Função para renderizar o calendário (funcionário)
         function renderizarCalendario(ano, mes) {
             const calendario = document.getElementById('calendarioServicos');
             const mesAno = document.getElementById('mesAnoAtual');
@@ -1068,7 +1271,7 @@
             }
         }
         
-        // Função para mudar o mês no calendário
+        // Função para mudar o mês no calendário (funcionário)
         function mudarMes(delta) {
             mesCalendario += delta;
             if (mesCalendario < 0) {
@@ -1079,6 +1282,227 @@
                 anoCalendario++;
             }
             renderizarCalendario(anoCalendario, mesCalendario);
+        }
+        
+        // Função para carregar horários
+        function carregarHorarios() {
+            document.getElementById('horaAbertura').value = dados.horarios.abertura;
+            document.getElementById('horaFechamento').value = dados.horarios.fechamento;
+            document.getElementById('duracaoSlot').value = dados.horarios.duracaoSlot;
+        }
+        
+        // Função para salvar horários
+        function salvarHorarios() {
+            dados.horarios.abertura = document.getElementById('horaAbertura').value;
+            dados.horarios.fechamento = document.getElementById('horaFechamento').value;
+            dados.horarios.duracaoSlot = parseInt(document.getElementById('duracaoSlot').value);
+            salvarDados();
+            alert('Horários salvos com sucesso!');
+        }
+        
+        // Função para renderizar o calendário (cliente)
+        function renderizarCalendarioCliente(ano, mes) {
+            const calendario = document.getElementById('calendarioClienteView');
+            const mesAno = document.getElementById('mesAnoAtualCliente');
+            
+            // Atualiza o cabeçalho com o mês/ano atual
+            const nomesMeses = [
+                'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+                'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+            ];
+            mesAno.textContent = `${nomesMeses[mes]} ${ano}`;
+            
+            // Limpa o calendário
+            calendario.innerHTML = '';
+            
+            // Cabeçalhos dos dias da semana
+            const diasSemana = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+            diasSemana.forEach(dia => {
+                const header = document.createElement('div');
+                header.className = 'calendar-header';
+                header.textContent = dia;
+                calendario.appendChild(header);
+            });
+            
+            // Primeiro dia do mês
+            const primeiroDia = new Date(ano, mes, 1);
+            // Último dia do mês
+            const ultimoDia = new Date(ano, mes + 1, 0);
+            // Dia da semana do primeiro dia (0 = Domingo, 6 = Sábado)
+            const primeiroDiaSemana = primeiroDia.getDay();
+            // Número de dias no mês
+            const diasNoMes = ultimoDia.getDate();
+            
+            // Dias do mês anterior visíveis
+            const ultimoDiaMesAnterior = new Date(ano, mes, 0).getDate();
+            for (let i = primeiroDiaSemana - 1; i >= 0; i--) {
+                const dia = document.createElement('div');
+                dia.className = 'calendar-day other-month';
+                dia.innerHTML = `<div class="calendar-day-number">${ultimoDiaMesAnterior - i}</div>`;
+                calendario.appendChild(dia);
+            }
+            
+            // Dias do mês atual
+            for (let i = 1; i <= diasNoMes; i++) {
+                const dia = document.createElement('div');
+                dia.className = 'calendar-day';
+                dia.innerHTML = `<div class="calendar-day-number">${i}</div>`;
+                
+                // Adicionar eventos do dia
+                const dataAtual = `${ano}-${String(mes + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+                const servicosDoDia = dados.servicos.filter(s => s.data === dataAtual);
+                
+                // Adicionar evento para selecionar data
+                dia.addEventListener('click', () => selecionarDataCliente(dataAtual, dia));
+                
+                calendario.appendChild(dia);
+            }
+            
+            // Dias do próximo mês visíveis
+            const totalCelulas = 42; // 6 semanas * 7 dias
+            const celulasPreenchidas = primeiroDiaSemana + diasNoMes;
+            const diasProximoMes = totalCelulas - celulasPreenchidas;
+            
+            for (let i = 1; i <= diasProximoMes; i++) {
+                const dia = document.createElement('div');
+                dia.className = 'calendar-day other-month';
+                dia.innerHTML = `<div class="calendar-day-number">${i}</div>`;
+                calendario.appendChild(dia);
+            }
+        }
+        
+        // Função para selecionar data no calendário cliente
+        function selecionarDataCliente(data, elemento) {
+            // Remover seleção anterior
+            document.querySelectorAll('#calendarioClienteView .calendar-day').forEach(dia => {
+                dia.style.backgroundColor = '';
+            });
+            
+            // Marcar data selecionada
+            elemento.style.backgroundColor = '#e3f2fd';
+            dataSelecionadaCliente = data;
+            
+            // Mostrar formulário de agendamento
+            document.getElementById('detalhesAgendamento').style.display = 'none';
+            document.getElementById('formAgendamento').style.display = 'block';
+            document.getElementById('dataSelecionada').textContent = `Data: ${new Date(data).toLocaleDateString('pt-BR')}`;
+            
+            // Gerar slots de horário
+            gerarSlotsHorarios(data);
+        }
+        
+        // Função para gerar slots de horário
+        function gerarSlotsHorarios(data) {
+            const slotsContainer = document.getElementById('slotsHorarios');
+            slotsContainer.innerHTML = '';
+            
+            const abertura = dados.horarios.abertura;
+            const fechamento = dados.horarios.fechamento;
+            const duracaoSlot = dados.horarios.duracaoSlot;
+            
+            // Converter horários para minutos
+            const [horaAbertura, minAbertura] = abertura.split(':').map(Number);
+            const [horaFechamento, minFechamento] = fechamento.split(':').map(Number);
+            const aberturaMinutos = horaAbertura * 60 + minAbertura;
+            const fechamentoMinutos = horaFechamento * 60 + minFechamento;
+            
+            // Serviços já agendados para esta data
+            const servicosDoDia = dados.servicos.filter(s => s.data === data);
+            
+            // Gerar slots
+            for (let minutos = aberturaMinutos; minutos < fechamentoMinutos; minutos += duracaoSlot) {
+                const horas = Math.floor(minutos / 60);
+                const minutosRestantes = minutos % 60;
+                const horaFormatada = `${String(horas).padStart(2, '0')}:${String(minutosRestantes).padStart(2, '0')}`;
+                
+                // Verificar se já existe serviço agendado neste horário
+                const slotOcupado = servicosDoDia.some(s => s.hora === horaFormatada);
+                
+                const slot = document.createElement('div');
+                slot.className = `time-slot ${slotOcupado ? 'unavailable' : 'available'}`;
+                slot.textContent = horaFormatada;
+                slot.dataset.hora = horaFormatada;
+                
+                if (!slotOcupado) {
+                    slot.addEventListener('click', () => selecionarSlot(slot));
+                }
+                
+                slotsContainer.appendChild(slot);
+            }
+        }
+        
+        // Função para selecionar slot de horário
+        function selecionarSlot(slot) {
+            // Remover seleção anterior
+            document.querySelectorAll('.time-slot').forEach(s => {
+                s.classList.remove('selected');
+            });
+            
+            // Marcar slot selecionado
+            slot.classList.add('selected');
+        }
+        
+        // Função para confirmar agendamento
+        function confirmarAgendamento() {
+            const horaSelecionada = document.querySelector('.time-slot.selected');
+            const servico = document.getElementById('servicoCliente').value;
+            const nomeCliente = document.getElementById('nomeCliente').value;
+            const whatsappCliente = document.getElementById('whatsappCliente').value;
+            
+            if (!horaSelecionada) {
+                alert('Por favor, selecione um horário.');
+                return;
+            }
+            
+            if (!servico) {
+                alert('Por favor, selecione um serviço.');
+                return;
+            }
+            
+            if (!nomeCliente) {
+                alert('Por favor, informe seu nome.');
+                return;
+            }
+            
+            // Criar novo serviço
+            const novoServico = {
+                id: Date.now(),
+                nome: servico,
+                preco: 0, // Preço pode ser definido posteriormente
+                 dataSelecionadaCliente,
+                hora: horaSelecionada.dataset.hora,
+                cliente: nomeCliente,
+                whatsappCliente: whatsappCliente,
+                status: 'agendado'
+            };
+            
+            dados.servicos.push(novoServico);
+            salvarDados();
+            
+            alert('Agendamento realizado com sucesso!');
+            
+            // Resetar formulário
+            document.getElementById('formAgendamento').style.display = 'none';
+            document.getElementById('detalhesAgendamento').style.display = 'block';
+            document.getElementById('servicoCliente').value = '';
+            document.getElementById('nomeCliente').value = '';
+            document.getElementById('whatsappCliente').value = '';
+            
+            // Atualizar calendário
+            renderizarCalendarioCliente(anoCalendarioCliente, mesCalendarioCliente);
+        }
+        
+        // Função para mudar o mês no calendário (cliente)
+        function mudarMesCliente(delta) {
+            mesCalendarioCliente += delta;
+            if (mesCalendarioCliente < 0) {
+                mesCalendarioCliente = 11;
+                anoCalendarioCliente--;
+            } else if (mesCalendarioCliente > 11) {
+                mesCalendarioCliente = 0;
+                anoCalendarioCliente++;
+            }
+            renderizarCalendarioCliente(anoCalendarioCliente, mesCalendarioCliente);
         }
         
         // Função para atualizar o relatório
