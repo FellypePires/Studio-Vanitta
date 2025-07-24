@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -858,7 +857,7 @@
                     tipo: tipo,
                     valor: valor,
                     descricao: descricao,
-                    data: data,
+                     data,
                     hora: hora
                 };
                 dados.movimentacoes.push(movimentacao);
@@ -1048,7 +1047,7 @@
                         tipo: 'entrada',
                         valor: servico.preco,
                         descricao: `Serviço concluído: ${servico.nome}`,
-                        data: new Date().toISOString().split('T')[0],
+                         new Date().toISOString().split('T')[0],
                         hora: new Date().toTimeString().substring(0, 5)
                     };
                     dados.movimentacoes.push(movimentacao);
