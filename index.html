@@ -159,7 +159,6 @@
                 margin: 20px;
             }
         }
-        
     </style>
 </head>
 <body>
@@ -189,7 +188,6 @@
             </div>
         </div>
     </div>
-
     <!-- Main Application (Hidden by default) -->
     <div id="mainApp" style="display: none;">
         <!-- Navbar -->
@@ -209,7 +207,6 @@
                 </div>
             </div>
         </nav>
-
         <div class="container-fluid">
             <div class="row">
                 <!-- Sidebar -->
@@ -244,7 +241,6 @@
                         </ul>
                     </div>
                 </nav>
-
                 <!-- Main Content -->
                 <main class="col-md-9 ms-sm-auto col-lg-10 main-content">
                     <!-- Dashboard Section -->
@@ -471,7 +467,6 @@
                 alert('Usuário ou senha incorretos!');
             }
         });
-
         // Dados do sistema (inicialmente vazio)
         let dados = {
             movimentacoes: [],
@@ -479,7 +474,6 @@
             servicos: [],
             salarios: []
         };
-
         // Função para salvar dados no localStorage e na nuvem (Google Sheets)
         function salvarDados() {
             localStorage.setItem('vanittaStudio_dados', JSON.stringify(dados));
@@ -492,7 +486,6 @@
                 headers: { 'Content-Type': 'application/json' }
             }).catch(() => {});
         }
-
         // Função para carregar dados do localStorage (sempre inicia SEM funcionárias)
         function carregarDados() {
             const dadosSalvos = localStorage.getItem('vanittaStudio_dados');
@@ -510,7 +503,6 @@
                 salvarDados();
             }
         }
-
         // Função para mostrar seções
         function showSection(sectionId) {
             document.querySelectorAll('.section').forEach(section => {
@@ -527,7 +519,6 @@
             }
             if(sectionId === 'dashboard') atualizarDashboard();
         }
-
         // Função para logout
         function logout() {
             if (confirm('Deseja realmente sair do sistema?')) {
@@ -537,7 +528,6 @@
                 document.getElementById('loginForm').reset();
             }
         }
-
         // Função para salvar movimentação
         function salvarMovimentacao() {
             const tipo = document.getElementById('tipoMovimentacao').value;
@@ -565,7 +555,6 @@
                 alert('Preencha todos os campos obrigatórios!');
             }
         }
-
         // Função para atualizar tabela de caixa
         function atualizarTabelaCaixa() {
             const tbody = document.querySelector('#tabelaCaixa tbody');
@@ -589,7 +578,6 @@
                 tbody.appendChild(tr);
             });
         }
-
         // Função para salvar ou editar funcionária (com WhatsApp)
         function salvarFuncionaria() {
             const id = document.getElementById('idFuncionaria').value;
@@ -635,7 +623,6 @@
                 alert('Preencha todos os campos obrigatórios!');
             }
         }
-
         // Função para editar funcionária (preenche WhatsApp)
         function editarFuncionaria(id) {
             const funcionaria = dados.funcionarias.find(f => f.id === id);
@@ -650,7 +637,6 @@
                 modal.show();
             }
         }
-
         // Função para excluir funcionária
         function excluirFuncionaria(id) {
             if (confirm('Deseja realmente excluir esta funcionária?')) {
@@ -660,7 +646,6 @@
                 alert('Funcionária excluída com sucesso!');
             }
         }
-
         // Função para atualizar lista de funcionárias (com botão WhatsApp)
         function atualizarListaFuncionarias() {
             const container = document.getElementById('listaFuncionarias');
@@ -693,7 +678,6 @@
                 container.appendChild(col);
             });
         }
-
         // Função para salvar serviço/agendamento
         function salvarServico() {
             const nome = document.getElementById('nomeServico').value;
@@ -710,7 +694,8 @@
                     data: data,
                     hora: hora,
                     cliente: cliente,
-                    whatsappCliente: whatsappCliente
+                    whatsappCliente: whatsappCliente,
+                    status: 'agendado' // Status inicial
                 };
                 dados.servicos.push(servico);
                 atualizarListaServicos();
@@ -723,7 +708,40 @@
                 alert('Preencha todos os campos obrigatórios!');
             }
         }
-
+        // Função para dar baixa em um serviço
+        function darBaixaServico(id) {
+            if (confirm('Deseja realmente dar baixa neste serviço?')) {
+                const servico = dados.servicos.find(s => s.id === id);
+                if (servico) {
+                    servico.status = 'concluido';
+                    
+                    // Adicionar movimentação automática no caixa
+                    const movimentacao = {
+                        id: Date.now(),
+                        tipo: 'entrada',
+                        valor: servico.preco,
+                        descricao: `Serviço concluído: ${servico.nome}`,
+                        data: new Date().toISOString().split('T')[0],
+                        hora: new Date().toTimeString().substring(0, 5)
+                    };
+                    dados.movimentacoes.push(movimentacao);
+                    
+                    atualizarListaServicos();
+                    atualizarInterface();
+                    salvarDados();
+                    alert('Serviço concluído e movimentação registrada no caixa!');
+                }
+            }
+        }
+        // Função para excluir serviço
+        function excluirServico(id) {
+            if (confirm('Deseja realmente excluir este serviço?')) {
+                dados.servicos = dados.servicos.filter(s => s.id !== id);
+                atualizarListaServicos();
+                salvarDados();
+                alert('Serviço excluído com sucesso!');
+            }
+        }
         // Função para mostrar serviços agendados
         function atualizarListaServicos() {
             const container = document.getElementById('listaServicos');
@@ -731,24 +749,41 @@
             dados.servicos.forEach(serv => {
                 const col = document.createElement('div');
                 col.className = 'col-md-4 mb-3';
+                
+                // Determinar classe de status
+                const statusClass = serv.status === 'concluido' ? 'bg-success text-white' : 'bg-warning text-dark';
+                const statusText = serv.status === 'concluido' ? 'Concluído' : 'Agendado';
+                
                 const whatsappBtn = serv.whatsappCliente
                     ? `<a class="btn btn-success btn-sm mb-2" href="https://wa.me/55${serv.whatsappCliente.replace(/\D/g,'')}" target="_blank"><i class="bi bi-whatsapp"></i> WhatsApp Cliente</a>`
                     : '';
+                
                 col.innerHTML = `
                     <div class="card">
                         <div class="card-body">
-                            <h5>${serv.nome}</h5>
+                            <div class="d-flex justify-content-between align-items-start">
+                                <h5>${serv.nome}</h5>
+                                <span class="badge ${statusClass}">${statusText}</span>
+                            </div>
                             <p>Preço: R$ ${serv.preco.toLocaleString('pt-BR')}</p>
                             <p>Data: ${serv.data} ${serv.hora}</p>
                             <p>Cliente: ${serv.cliente || 'Não informado'}</p>
                             ${whatsappBtn}
+                            <div class="d-grid gap-2 mt-2">
+                                ${serv.status !== 'concluido' ? 
+                                    `<button class="btn btn-success btn-sm" onclick="darBaixaServico(${serv.id})">
+                                        <i class="bi bi-check-circle"></i> Dar Baixa
+                                    </button>` : ''}
+                                <button class="btn btn-danger btn-sm" onclick="excluirServico(${serv.id})">
+                                    <i class="bi bi-trash"></i> Excluir
+                                </button>
+                            </div>
                         </div>
                     </div>
                 `;
                 container.appendChild(col);
             });
         }
-
         // Função para mostrar salários (exemplo simples)
         function atualizarListaSalarios() {
             const container = document.getElementById('listaSalarios');
@@ -772,7 +807,6 @@
                 container.appendChild(col);
             });
         }
-
         // Função para atualizar o dashboard
         function atualizarDashboard() {
             const container = document.getElementById('dashboardContent');
@@ -781,6 +815,8 @@
             const saldo = totalEntradas - totalSaidas;
             const totalFuncionarias = dados.funcionarias.length;
             const totalServicos = dados.servicos.length;
+            const servicosConcluidos = dados.servicos.filter(s => s.status === 'concluido').length;
+            
             container.innerHTML = `
                 <div class="col-md-3 mb-3">
                     <div class="card stat-card">
@@ -822,9 +858,16 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card stat-card">
+                        <div class="card-body">
+                            <h6 class="card-title">Serviços Concluídos</h6>
+                            <h3 class="text-success">${servicosConcluidos}</h3>
+                        </div>
+                    </div>
+                </div>
             `;
         }
-
         // Atualiza toda a interface
         function atualizarInterface() {
             atualizarTabelaCaixa();
@@ -833,7 +876,6 @@
             atualizarListaSalarios();
             atualizarDashboard();
         }
-
         // Inicializar data atual nos formulários
         window.onload = function() {
             const hoje = new Date().toISOString().split('T')[0];
@@ -841,7 +883,6 @@
             document.getElementById('admissaoFuncionaria').value = hoje;
             document.getElementById('dataAgendamento').value = hoje;
         };
-
         // Tema escuro/claro
         document.getElementById('themeToggle').addEventListener('click', function() {
             document.body.classList.toggle('dark-mode');
@@ -855,10 +896,8 @@
                 icon.classList.add('bi-moon');
             }
         });
-
         // Salvar dados automaticamente a cada 30 segundos
         setInterval(salvarDados, 30000);
     </script>
-   
 </body>
 </html>
