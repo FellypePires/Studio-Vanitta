@@ -127,13 +127,26 @@
             background-color: #232323 !important;
             color: var(--text-dark) !important;
         }
+        body.dark-mode .table td {
+            color: var(--text-dark) !important;
+        }
         body.dark-mode .btn-primary {
             background-color: #6a1cb9 !important;
             border-color: #6a1cb9 !important;
+            color: white !important;
         }
         body.dark-mode .btn-secondary {
             background-color: #444 !important;
             border-color: #444 !important;
+            color: white !important;
+        }
+        body.dark-mode .btn-outline-danger {
+            color: #dc3545 !important;
+            border-color: #dc3545 !important;
+        }
+        body.dark-mode .btn-outline-danger:hover {
+            background-color: #dc3545 !important;
+            color: white !important;
         }
         body.dark-mode .form-control,
         body.dark-mode .form-select {
@@ -145,79 +158,93 @@
         body.dark-mode .form-select:focus {
             background-color: #232323 !important;
             color: var(--text-dark) !important;
+            border-color: var(--primary) !important;
+            box-shadow: 0 0 0 0.2rem rgba(138, 43, 226, 0.25) !important;
         }
-        .calendar {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 5px;
+        body.dark-mode .form-label {
+            color: var(--text-dark) !important;
         }
-        .calendar-header {
-            text-align: center;
-            font-weight: bold;
-            padding: 10px 0;
+        body.dark-mode .alert {
+            color: var(--text-dark) !important;
         }
-        .calendar-day {
-            height: 80px;
-            border: 1px solid #ddd;
-            padding: 5px;
-            background-color: white;
-            overflow: hidden;
-            font-size: 0.8rem;
+        body.dark-mode .alert-info {
+            background-color: #d1ecf1 !important;
+            border-color: #bee5eb !important;
+            color: #0c5460 !important;
+        }
+        body.dark-mode .alert-warning {
+            background-color: #fff3cd !important;
+            border-color: #ffeaa7 !important;
+            color: #856404 !important;
+        }
+        body.dark-mode .badge {
+            color: white !important;
+        }
+        body.dark-mode .badge.bg-success {
+            background-color: #28a745 !important;
+        }
+        body.dark-mode .badge.bg-danger {
+            background-color: #dc3545 !important;
+        }
+        body.dark-mode .badge.bg-warning {
+            background-color: #ffc107 !important;
+            color: #212529 !important;
         }
         body.dark-mode .calendar-day {
-            background-color: #232323;
-            border-color: #444;
-        }
-        .calendar-day.other-month {
-            background-color: #f0f0f0;
-            color: #999;
+            background-color: #232323 !important;
+            border-color: #444 !important;
+            color: var(--text-dark) !important;
         }
         body.dark-mode .calendar-day.other-month {
-            background-color: #1a1a1a;
-            color: #666;
+            background-color: #1a1a1a !important;
+            color: #666 !important;
         }
-        .calendar-day-number {
-            font-weight: bold;
-            margin-bottom: 3px;
+        body.dark-mode .time-slot {
+            background-color: #2a2a2a !important;
+            border-color: #444 !important;
+            color: var(--text-dark) !important;
         }
-        .calendar-event {
-            background-color: var(--primary);
-            color: white;
-            padding: 2px 4px;
-            border-radius: 3px;
-            margin-bottom: 2px;
-            font-size: 0.7rem;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+        body.dark-mode .time-slot.available {
+            background-color: #1e3a2a !important;
+            border-color: #2d5a3d !important;
         }
-        .report-card {
-            transition: transform 0.3s;
+        body.dark-mode .time-slot.unavailable {
+            background-color: #3a1e1e !important;
+            border-color: #5a2d2d !important;
         }
-        .report-card:hover {
-            transform: translateY(-3px);
+        body.dark-mode .time-slot.selected {
+            background-color: #1e3a5a !important;
+            border-color: #2d5a8a !important;
         }
-        .time-slot {
-            background-color: #e9ecef;
-            border: 1px solid #ced4da;
-            border-radius: 4px;
-            padding: 5px;
-            margin: 2px 0;
-            font-size: 0.8rem;
-            cursor: pointer;
+        body.dark-mode .navbar {
+            background-color: #232323 !important;
+            color: var(--text-dark) !important;
         }
-        .time-slot.available {
-            background-color: #d4edda;
-            border-color: #c3e6cb;
+        body.dark-mode .navbar-brand {
+            color: var(--primary) !important;
         }
-        .time-slot.unavailable {
-            background-color: #f8d7da;
-            border-color: #f5c6cb;
-            text-decoration: line-through;
+        body.dark-mode .dropdown-menu {
+            background-color: #232323 !important;
+            color: var(--text-dark) !important;
         }
-        .time-slot.selected {
-            background-color: #b8daff;
-            border-color: #9fcdff;
+        body.dark-mode .dropdown-item {
+            color: var(--text-dark) !important;
+        }
+        body.dark-mode .dropdown-item:hover {
+            background-color: #333 !important;
+        }
+        body.dark-mode .text-muted {
+            color: #aaa !important;
+        }
+        body.dark-mode .border-bottom {
+            border-bottom-color: #444 !important;
+        }
+        body.dark-mode .shadow-sm {
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.5) !important;
+        }
+        body.dark-mode .calendar-event {
+            background-color: var(--primary) !important;
+            color: white !important;
         }
         @media (max-width: 768px) {
             .sidebar {
@@ -824,11 +851,17 @@
             document.querySelectorAll('.sidebar .nav-link').forEach(link => {
                 link.classList.remove('active');
             });
-            event.preventDefault();
-            const clickedLink = event.target.closest('.nav-link');
+            
+            // Previne o comportamento padrão do link
+            if (event) {
+                event.preventDefault();
+            }
+            
+            const clickedLink = event ? event.target.closest('.nav-link') : null;
             if (clickedLink) {
                 clickedLink.classList.add('active');
             }
+            
             if(sectionId === 'dashboard') atualizarDashboard();
             if(sectionId === 'relatorios') atualizarRelatorio();
             if(sectionId === 'calendario') renderizarCalendario(anoCalendario, mesCalendario);
@@ -857,7 +890,7 @@
                     tipo: tipo,
                     valor: valor,
                     descricao: descricao,
-                     data,
+                    data: data,
                     hora: hora
                 };
                 dados.movimentacoes.push(movimentacao);
@@ -1047,7 +1080,7 @@
                         tipo: 'entrada',
                         valor: servico.preco,
                         descricao: `Serviço concluído: ${servico.nome}`,
-                         new : Date().toISOString().split('T')[0],
+                         new: Date().toISOString().split('T')[0],
                         hora: new Date().toTimeString().substring(0, 5)
                     };
                     dados.movimentacoes.push(movimentacao);
@@ -1468,7 +1501,7 @@
                 id: Date.now(),
                 nome: servico,
                 preco: 0, // Preço pode ser definido posteriormente
-                 dataSelecionadaCliente,
+                data: dataSelecionadaCliente,
                 hora: horaSelecionada.dataset.hora,
                 cliente: nomeCliente,
                 whatsappCliente: whatsappCliente,
