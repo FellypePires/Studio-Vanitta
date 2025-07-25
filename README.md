@@ -1,6 +1,6 @@
 # Vánitta Studio - Sistema de Gestão
 
-Este projeto é uma aplicação web completa para gerenciar as operações de um Studio Beleza), incluindo controle de caixa, gestão de funcionárias, serviços agendados, salários e relatórios financeiros.
+Este projeto é uma aplicação web completa para gerenciar as operações de um Studio Beleza, incluindo controle de caixa, gestão de funcionárias, serviços agendados, salários e relatórios financeiros.
 
 ## 🌟 Funcionalidades
 
