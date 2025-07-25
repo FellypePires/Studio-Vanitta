@@ -97,3 +97,4 @@ O projeto é composto por um único arquivo HTML que contém todo o código nece
 *   Carregamento dos dados ao iniciar o sistema.
 *   Uso do `localStorage` do navegador.
 
+Desenvolvido por **Fellype Pires**.
