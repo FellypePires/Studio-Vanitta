@@ -17,16 +17,19 @@
             --text-dark: #f8f9fa;
             --text-light: #333;
         }
+        
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg-light);
             color: var(--text-light);
             transition: background 0.3s, color 0.3s;
         }
+        
         .navbar-brand {
             font-weight: bold;
             color: var(--primary) !important;
         }
+        
         .sidebar {
             background: linear-gradient(180deg, var(--primary), var(--secondary));
             color: white;
@@ -36,53 +39,67 @@
             width: 250px;
             z-index: 1000;
         }
+        
         .sidebar .nav-link {
             color: rgba(255, 255, 255, 0.8);
             margin: 5px 15px;
             border-radius: 5px;
             transition: all 0.3s;
         }
-        .sidebar .nav-link:hover, .sidebar .nav-link.active {
+        
+        .sidebar .nav-link:hover, 
+        .sidebar .nav-link.active {
             background-color: rgba(255, 255, 255, 0.2);
             color: white;
         }
+        
         .card-header {
             background: linear-gradient(90deg, var(--primary), var(--secondary));
             color: white;
             font-weight: bold;
         }
+        
         .stat-card {
             border-left: 4px solid var(--primary);
             transition: transform 0.3s;
         }
+        
         .stat-card:hover {
             transform: translateY(-5px);
         }
+        
         .btn-primary {
             background-color: var(--primary);
             border-color: var(--primary);
         }
+        
         .btn-primary:hover {
             background-color: #6a1cb9;
             border-color: #6a1cb9;
         }
+        
         .btn-danger {
             background-color: #dc3545;
             border-color: #dc3545;
         }
+        
         .table th {
             background-color: var(--light);
         }
+        
         .main-content {
             margin-left: 250px;
             padding: 20px;
         }
+        
         .section {
             display: none;
         }
+        
         .section.active {
             display: block;
         }
+        
         .login-container {
             display: flex;
             justify-content: center;
@@ -90,6 +107,7 @@
             height: 100vh;
             background: linear-gradient(135deg, var(--primary), var(--secondary));
         }
+        
         .login-card {
             width: 100%;
             max-width: 400px;
@@ -97,6 +115,7 @@
             border-radius: 10px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
+        
         .theme-toggle {
             cursor: pointer;
             border: none;
@@ -104,58 +123,70 @@
             font-size: 1.5rem;
             color: var(--primary);
         }
+        
         /* Dark theme */
         body.dark-mode {
             background-color: var(--bg-dark) !important;
             color: var(--text-dark) !important;
         }
+        
         body.dark-mode .main-content,
         body.dark-mode .login-card,
         body.dark-mode .modal-content {
             background-color: #232323 !important;
             color: var(--text-dark) !important;
         }
+        
         body.dark-mode .sidebar {
             background: linear-gradient(180deg, #2d0066, #b3006b);
         }
+        
         body.dark-mode .card,
         body.dark-mode .card-header {
             background-color: #232323 !important;
             color: var(--text-dark) !important;
         }
+        
         body.dark-mode .table th {
             background-color: #232323 !important;
             color: var(--text-dark) !important;
         }
+        
         body.dark-mode .btn-primary {
             background-color: #6a1cb9 !important;
             border-color: #6a1cb9 !important;
         }
+        
         body.dark-mode .btn-secondary {
             background-color: #444 !important;
             border-color: #444 !important;
         }
+        
         body.dark-mode .form-control,
         body.dark-mode .form-select {
             background-color: #232323 !important;
             color: var(--text-dark) !important;
             border-color: #444 !important;
         }
+        
         body.dark-mode .form-control:focus,
         body.dark-mode .form-select:focus {
             background-color: #232323 !important;
             color: var(--text-dark) !important;
         }
+        
         .calendar {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
             gap: 5px;
         }
+        
         .calendar-header {
             text-align: center;
             font-weight: bold;
             padding: 10px 0;
         }
+        
         .calendar-day {
             height: 80px;
             border: 1px solid #ddd;
@@ -164,22 +195,27 @@
             overflow: hidden;
             font-size: 0.8rem;
         }
+        
         body.dark-mode .calendar-day {
             background-color: #232323;
             border-color: #444;
         }
+        
         .calendar-day.other-month {
             background-color: #f0f0f0;
             color: #999;
         }
+        
         body.dark-mode .calendar-day.other-month {
             background-color: #1a1a1a;
             color: #666;
         }
+        
         .calendar-day-number {
             font-weight: bold;
             margin-bottom: 3px;
         }
+        
         .calendar-event {
             background-color: var(--primary);
             color: white;
@@ -191,21 +227,26 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
+        
         .report-card {
             transition: transform 0.3s;
         }
+        
         .report-card:hover {
             transform: translateY(-3px);
         }
+        
         @media (max-width: 768px) {
             .sidebar {
                 width: 100%;
                 height: auto;
                 position: relative;
             }
+            
             .main-content {
                 margin-left: 0;
             }
+            
             .login-card {
                 margin: 20px;
             }
@@ -213,12 +254,12 @@
     </style>
 </head>
 <body>
-    <!-- Login Screen -->
+    <!-- Tela de login -->
     <div id="loginScreen" class="login-container">
         <div class="login-card bg-white">
             <div class="text-center mb-4">
                 <i class="bi bi-scissors" style="font-size: 3rem; color: var(--primary);"></i>
-                <h2 class="mt-2"> Studio Beleza</h2>
+                <h2 class="mt-2">Vánitta Studio</h2>
                 <p class="text-muted">Sistema de Gestão</p>
             </div>
             <form id="loginForm">
@@ -235,11 +276,12 @@
                 </div>
             </form>
             <div class="text-center mt-3">
-                <small class="text-muted">© 2025 Studio - Todos os direitos reservados</small>
+                <small class="text-muted">© 2025 Vánitta Studio - Todos os direitos reservados</small>
             </div>
         </div>
     </div>
-    <!-- Main Application (Hidden by default) -->
+
+    <!-- Aplicação principal (oculta por padrão) -->
     <div id="mainApp" style="display: none;">
         <!-- Navbar -->
         <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
@@ -258,6 +300,7 @@
                 </div>
             </div>
         </nav>
+
         <div class="container-fluid">
             <div class="row">
                 <!-- Sidebar -->
@@ -302,16 +345,18 @@
                         </ul>
                     </div>
                 </nav>
-                <!-- Main Content -->
+
+                <!-- Conteúdo principal -->
                 <main class="col-md-9 ms-sm-auto col-lg-10 main-content">
-                    <!-- Dashboard Section -->
+                    <!-- Dashboard -->
                     <section id="dashboard" class="section active">
                         <h1 class="h2">Dashboard</h1>
                         <div class="row" id="dashboardContent">
                             <!-- Cards do dashboard serão inseridos aqui -->
                         </div>
                     </section>
-                    <!-- Caixa Section -->
+
+                    <!-- Caixa -->
                     <section id="caixa" class="section">
                         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                             <h1 class="h2">Controle de Caixa</h1>
@@ -347,7 +392,8 @@
                             </div>
                         </div>
                     </section>
-                    <!-- Funcionárias Section -->
+
+                    <!-- Funcionárias -->
                     <section id="funcionarias" class="section">
                         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                             <h1 class="h2">Gestão de Funcionárias</h1>
@@ -359,7 +405,8 @@
                             <!-- Funcionárias serão inseridas aqui -->
                         </div>
                     </section>
-                    <!-- Serviços Section -->
+
+                    <!-- Serviços -->
                     <section id="servicos" class="section">
                         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                             <h1 class="h2">Serviços Agendados</h1>
@@ -368,10 +415,11 @@
                             </button>
                         </div>
                         <div class="row" id="listaServicos">
-                            <!-- Serviços serão inseridas aqui -->
+                            <!-- Serviços serão inseridos aqui -->
                         </div>
                     </section>
-                    <!-- Calendário Section -->
+
+                    <!-- Calendário -->
                     <section id="calendario" class="section">
                         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                             <h1 class="h2">Calendário de Serviços</h1>
@@ -397,7 +445,8 @@
                             </div>
                         </div>
                     </section>
-                    <!-- Relatórios Section -->
+
+                    <!-- Relatórios -->
                     <section id="relatorios" class="section">
                         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                             <h1 class="h2">Relatórios Financeiros</h1>
@@ -429,7 +478,8 @@
                             <!-- Relatório será gerado aqui -->
                         </div>
                     </section>
-                    <!-- Salários Section -->
+
+                    <!-- Salários -->
                     <section id="salarios" class="section">
                         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                             <h1 class="h2">Salários</h1>
@@ -441,8 +491,9 @@
                 </main>
             </div>
         </div>
-        <!-- Modals -->
-        <!-- Movimentação Modal -->
+
+        <!-- Modais -->
+        <!-- Movimentação -->
         <div class="modal fade" id="movimentacaoModal" tabindex="-1">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -484,7 +535,8 @@
                 </div>
             </div>
         </div>
-        <!-- Funcionária Modal -->
+
+        <!-- Funcionária -->
         <div class="modal fade" id="funcionariaModal" tabindex="-1">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -524,7 +576,8 @@
                 </div>
             </div>
         </div>
-        <!-- Serviço Modal (Agendamento) -->
+
+        <!-- Serviço (Agendamento) -->
         <div class="modal fade" id="servicoModal" tabindex="-1">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -569,6 +622,7 @@
             </div>
         </div>
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // Função de login
@@ -576,7 +630,8 @@
             e.preventDefault();
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
-            // Usuário: admin | Senha: 123456
+            
+            // Credenciais de acesso
             if (username === 'admin' && password === '123456') {
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('mainApp').style.display = 'block';
@@ -587,27 +642,31 @@
                 alert('Usuário ou senha incorretos!');
             }
         });
-        // Dados do sistema (inicialmente vazio)
+
+        // Dados do sistema
         let dados = {
             movimentacoes: [],
             funcionarias: [],
             servicos: [],
             salarios: []
         };
+
         // Variáveis para o calendário
         let anoCalendario = new Date().getFullYear();
         let mesCalendario = new Date().getMonth();
+
         // Função para salvar dados no localStorage
         function salvarDados() {
             localStorage.setItem('vanittaStudio_dados', JSON.stringify(dados));
         }
+
         // Função para carregar dados do localStorage
         function carregarDados() {
             const dadosSalvos = localStorage.getItem('vanittaStudio_dados');
             if (dadosSalvos) {
                 dados = JSON.parse(dadosSalvos);
             } else {
-                // Inicia vazio
+                // Inicia com dados vazios
                 dados.funcionarias = [];
                 dados.movimentacoes = [];
                 dados.servicos = [];
@@ -615,24 +674,34 @@
                 salvarDados();
             }
         }
+
         // Função para mostrar seções
         function showSection(sectionId) {
+            // Remove a classe active de todas as seções
             document.querySelectorAll('.section').forEach(section => {
                 section.classList.remove('active');
             });
+            
+            // Adiciona a classe active na seção selecionada
             document.getElementById(sectionId).classList.add('active');
+            
+            // Remove a classe active de todos os links do sidebar
             document.querySelectorAll('.sidebar .nav-link').forEach(link => {
                 link.classList.remove('active');
             });
-            event.preventDefault();
+            
+            // Adiciona a classe active no link clicado
             const clickedLink = event.target.closest('.nav-link');
             if (clickedLink) {
                 clickedLink.classList.add('active');
             }
+            
+            // Atualiza as interfaces específicas de cada seção
             if(sectionId === 'dashboard') atualizarDashboard();
             if(sectionId === 'relatorios') atualizarRelatorio();
             if(sectionId === 'calendario') renderizarCalendario(anoCalendario, mesCalendario);
         }
+
         // Função para logout
         function logout() {
             if (confirm('Deseja realmente sair do sistema?')) {
@@ -642,6 +711,7 @@
                 document.getElementById('loginForm').reset();
             }
         }
+
         // Função para salvar movimentação
         function salvarMovimentacao() {
             const tipo = document.getElementById('tipoMovimentacao').value;
@@ -649,6 +719,7 @@
             const descricao = document.getElementById('descricaoMovimentacao').value;
             const data = document.getElementById('dataMovimentacao').value;
             const hora = document.getElementById('horaMovimentacao').value;
+            
             if (valor && descricao && data && hora) {
                 const movimentacao = {
                     id: Date.now(),
@@ -658,17 +729,21 @@
                     data: data,
                     hora: hora
                 };
+                
                 dados.movimentacoes.push(movimentacao);
                 atualizarInterface();
                 salvarDados();
+                
                 const modal = bootstrap.Modal.getInstance(document.getElementById('movimentacaoModal'));
                 modal.hide();
                 document.getElementById('formMovimentacao').reset();
+                
                 alert('Movimentação registrada com sucesso!');
             } else {
                 alert('Preencha todos os campos obrigatórios!');
             }
         }
+
         // Função para excluir movimentação
         function excluirMovimentacao(id) {
             if (confirm('Deseja realmente excluir esta movimentação?')) {
@@ -678,16 +753,19 @@
                 alert('Movimentação excluída com sucesso!');
             }
         }
+
         // Função para atualizar tabela de caixa
         function atualizarTabelaCaixa() {
             const tbody = document.querySelector('#tabelaCaixa tbody');
             tbody.innerHTML = '';
+            
             dados.movimentacoes.forEach(mov => {
                 const tr = document.createElement('tr');
                 const dataHora = mov.hora ? `${new Date(mov.data).toLocaleDateString('pt-BR')} ${mov.hora}` : new Date(mov.data).toLocaleDateString('pt-BR');
                 const tipoBadge = mov.tipo === 'entrada' ? '<span class="badge bg-success">Entrada</span>' : '<span class="badge bg-danger">Saída</span>';
                 const valorClass = mov.tipo === 'entrada' ? 'text-success' : 'text-danger';
                 const valorSinal = mov.tipo === 'entrada' ? '+' : '-';
+                
                 tr.innerHTML = `
                     <td>${dataHora}</td>
                     <td>${mov.descricao}</td>
@@ -702,6 +780,7 @@
                 tbody.appendChild(tr);
             });
         }
+
         // Função para salvar ou editar funcionária
         function salvarFuncionaria() {
             const id = document.getElementById('idFuncionaria').value;
@@ -710,6 +789,7 @@
             const salario = parseFloat(document.getElementById('salarioFuncionaria').value);
             const admissao = document.getElementById('admissaoFuncionaria').value;
             const contato = document.getElementById('contatoFuncionaria').value;
+            
             if (nome && cargo && salario && admissao) {
                 if (id) {
                     // Editar funcionária existente
@@ -736,17 +816,21 @@
                     };
                     dados.funcionarias.push(funcionaria);
                 }
+                
                 atualizarInterface();
                 salvarDados();
+                
                 const modal = bootstrap.Modal.getInstance(document.getElementById('funcionariaModal'));
                 modal.hide();
                 document.getElementById('formFuncionaria').reset();
                 document.getElementById('idFuncionaria').value = '';
+                
                 alert(id ? 'Funcionária atualizada com sucesso!' : 'Funcionária cadastrada com sucesso!');
             } else {
                 alert('Preencha todos os campos obrigatórios!');
             }
         }
+
         // Função para editar funcionária
         function editarFuncionaria(id) {
             const funcionaria = dados.funcionarias.find(f => f.id === id);
@@ -757,10 +841,12 @@
                 document.getElementById('salarioFuncionaria').value = funcionaria.salario;
                 document.getElementById('admissaoFuncionaria').value = funcionaria.admissao;
                 document.getElementById('contatoFuncionaria').value = funcionaria.contato || '';
+                
                 const modal = new bootstrap.Modal(document.getElementById('funcionariaModal'));
                 modal.show();
             }
         }
+
         // Função para excluir funcionária
         function excluirFuncionaria(id) {
             if (confirm('Deseja realmente excluir esta funcionária?')) {
@@ -770,14 +856,18 @@
                 alert('Funcionária excluída com sucesso!');
             }
         }
+
         // Função para atualizar lista de funcionárias
         function atualizarListaFuncionarias() {
             const container = document.getElementById('listaFuncionarias');
             container.innerHTML = '';
+            
             dados.funcionarias.forEach(func => {
                 const col = document.createElement('div');
                 col.className = 'col-md-4 mb-4';
+                
                 const contatoFormatado = func.contato ? func.contato.replace(/\D/g, '') : '';
+                
                 col.innerHTML = `
                     <div class="card shadow-sm">
                         <div class="card-body text-center">
@@ -802,6 +892,7 @@
                 container.appendChild(col);
             });
         }
+
         // Função para salvar serviço/agendamento
         function salvarServico() {
             const nome = document.getElementById('nomeServico').value;
@@ -810,28 +901,33 @@
             const hora = document.getElementById('horaAgendamento').value;
             const cliente = document.getElementById('clienteServico').value;
             const whatsappCliente = document.getElementById('whatsappClienteServico').value;
+            
             if (nome && preco && data && hora) {
                 const servico = {
                     id: Date.now(),
                     nome: nome,
                     preco: preco,
-                     data,
+                    data: data,
                     hora: hora,
                     cliente: cliente,
                     whatsappCliente: whatsappCliente,
                     status: 'agendado'
                 };
+                
                 dados.servicos.push(servico);
                 atualizarListaServicos();
                 salvarDados();
+                
                 const modal = bootstrap.Modal.getInstance(document.getElementById('servicoModal'));
                 modal.hide();
                 document.getElementById('formServico').reset();
+                
                 alert('Serviço agendado com sucesso!');
             } else {
                 alert('Preencha todos os campos obrigatórios!');
             }
         }
+
         // Função para dar baixa em um serviço
         function darBaixaServico(id) {
             if (confirm('Deseja realmente dar baixa neste serviço?')) {
@@ -848,15 +944,17 @@
                         data: new Date().toISOString().split('T')[0],
                         hora: new Date().toTimeString().substring(0, 5)
                     };
-                    dados.movimentacoes.push(movimentacao);
                     
+                    dados.movimentacoes.push(movimentacao);
                     atualizarListaServicos();
                     atualizarInterface();
                     salvarDados();
+                    
                     alert('Serviço concluído e movimentação registrada no caixa!');
                 }
             }
         }
+
         // Função para excluir serviço
         function excluirServico(id) {
             if (confirm('Deseja realmente excluir este serviço?')) {
@@ -867,10 +965,12 @@
                 alert('Serviço excluído com sucesso!');
             }
         }
+
         // Função para mostrar serviços agendados
         function atualizarListaServicos() {
             const container = document.getElementById('listaServicos');
             container.innerHTML = '';
+            
             dados.servicos.forEach(serv => {
                 const col = document.createElement('div');
                 col.className = 'col-md-4 mb-3';
@@ -908,14 +1008,17 @@
                 container.appendChild(col);
             });
         }
+
         // Função para mostrar salários
         function atualizarListaSalarios() {
             const container = document.getElementById('listaSalarios');
             container.innerHTML = '';
+            
             if (!dados.funcionarias.length) {
                 container.innerHTML = '<div class="alert alert-warning">Nenhuma funcionária cadastrada.</div>';
                 return;
             }
+            
             dados.funcionarias.forEach(func => {
                 const col = document.createElement('div');
                 col.className = 'col-md-4 mb-3';
@@ -931,9 +1034,11 @@
                 container.appendChild(col);
             });
         }
+
         // Função para atualizar o dashboard
         function atualizarDashboard() {
             const container = document.getElementById('dashboardContent');
+            
             const totalEntradas = dados.movimentacoes.filter(m => m.tipo === 'entrada').reduce((acc, m) => acc + m.valor, 0);
             const totalSaidas = dados.movimentacoes.filter(m => m.tipo === 'saida').reduce((acc, m) => acc + m.valor, 0);
             const saldo = totalEntradas - totalSaidas;
@@ -992,6 +1097,7 @@
                 </div>
             `;
         }
+
         // Função para renderizar o calendário
         function renderizarCalendario(ano, mes) {
             const calendario = document.getElementById('calendarioServicos');
@@ -1018,10 +1124,13 @@
             
             // Primeiro dia do mês
             const primeiroDia = new Date(ano, mes, 1);
+            
             // Último dia do mês
             const ultimoDia = new Date(ano, mes + 1, 0);
+            
             // Dia da semana do primeiro dia (0 = Domingo, 6 = Sábado)
             const primeiroDiaSemana = primeiroDia.getDay();
+            
             // Número de dias no mês
             const diasNoMes = ultimoDia.getDate();
             
@@ -1067,10 +1176,11 @@
                 calendario.appendChild(dia);
             }
         }
-        
+
         // Função para mudar o mês no calendário
         function mudarMes(delta) {
             mesCalendario += delta;
+            
             if (mesCalendario < 0) {
                 mesCalendario = 11;
                 anoCalendario--;
@@ -1078,14 +1188,15 @@
                 mesCalendario = 0;
                 anoCalendario++;
             }
+            
             renderizarCalendario(anoCalendario, mesCalendario);
         }
-        
+
         // Função para atualizar o relatório
         function atualizarRelatorio() {
             filtrarRelatorio();
         }
-        
+
         // Função para filtrar o relatório por mês/ano
         function filtrarRelatorio() {
             const mes = document.getElementById('mesRelatorio').value;
@@ -1174,7 +1285,7 @@
                 </div>
             `;
         }
-        
+
         // Função auxiliar para obter nome do mês
         function getNomeMes(numeroMes) {
             const meses = [
@@ -1183,7 +1294,7 @@
             ];
             return meses[parseInt(numeroMes) - 1];
         }
-        
+
         // Atualiza toda a interface
         function atualizarInterface() {
             atualizarTabelaCaixa();
@@ -1193,7 +1304,7 @@
             atualizarDashboard();
             renderizarCalendario(anoCalendario, mesCalendario);
         }
-        
+
         // Inicializar data atual nos formulários
         window.onload = function() {
             const hoje = new Date().toISOString().split('T')[0];
@@ -1212,10 +1323,11 @@
                 anoSelect.appendChild(option);
             }
         };
-        
+
         // Tema escuro/claro
         document.getElementById('themeToggle').addEventListener('click', function() {
             document.body.classList.toggle('dark-mode');
+            
             // Alterna ícone
             const icon = this.querySelector('i');
             if(document.body.classList.contains('dark-mode')) {
@@ -1226,7 +1338,7 @@
                 icon.classList.add('bi-moon');
             }
         });
-        
+
         // Salvar dados automaticamente a cada 30 segundos
         setInterval(salvarDados, 30000);
     </script>
